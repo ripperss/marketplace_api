@@ -1,6 +1,7 @@
 ﻿using marketplace_api.Models;
 using marketplace_api.Repository.UserRepository;
 using Microsoft.AspNetCore.JsonPatch;
+using marketplace_api.CustomExeption;
 
 namespace marketplace_api.Services.UserService;
 
@@ -17,13 +18,13 @@ public class UserService : IUserService
     {
         if (user == null)
         {
-            throw new NotFoundExeption("Данные при создание пользователя не могу быть раны null");
+            throw new ArgumentNullException("Данные при создание пользователя не могу быть раны null");
         }
         var result = _userRepository.RegisterAsync(user);
 
         if (result == null)
         {
-            throw new NotFoundExeption("Данный пользователь уже существует");
+            throw new UserAlreadyExistsException("Данный пользователь уже существует");
         }
 
         return result;

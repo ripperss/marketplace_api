@@ -1,6 +1,7 @@
 ﻿using marketplace_api.Data;
 using marketplace_api.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using marketplace_api.CustomExeption;
 
 namespace marketplace_api.Repository.UserRepository;
 
@@ -22,6 +23,8 @@ public class UserRepository : IUserRepository
         {
             throw new NotFoundExeption("Данный пользователь уже существует");
         }
+
+        _logger.LogInformation("Пользователь добавлен в бд @{user}",user);
 
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();

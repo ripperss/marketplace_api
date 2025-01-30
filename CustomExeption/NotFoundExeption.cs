@@ -1,4 +1,4 @@
-﻿namespace marketplace_api;
+﻿namespace marketplace_api.CustomExeption;
 
 public class NotFoundExeption : Exception
 {
