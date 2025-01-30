@@ -1,4 +1,5 @@
 using marketplace_api.Data;
+using marketplace_api.Mapping;
 using marketplace_api.Repository.UserRepository;
 using marketplace_api.Services.UserService;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddAutoMapper(typeof(UserProfiles));
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration) 
