@@ -5,6 +5,8 @@ namespace marketplace_api.Data;
 
 public class AppDbContext : DbContext
 {
+    private IConfiguration _configuration;
+    
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
@@ -15,17 +17,16 @@ public class AppDbContext : DbContext
     public DbSet<ProductViewHistory> ProductViewHistories { get; set; }
 
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options,IConfiguration configuration) : base(options)
     {
         Database.EnsureCreated();   
+        _configuration = configuration;
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Связь User ↔ Cart (1-ко-1)
-        modelBuilder.Entity<Cart>()
-            .HasOne(c => c.User)
-            .WithOne(u => u.Cart)
-            .HasForeignKey<Cart>(c => c.UserId);
+        
+        
 
         // Связь Product ↔ User (Продавец)
         modelBuilder.Entity<Product>()
