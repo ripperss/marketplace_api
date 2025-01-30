@@ -9,9 +9,7 @@ public class User
     public string Email { get; set; }
     public string HashPassword { get; set; }
     public DateTime DateRegistered { get; set; } = DateTime.UtcNow;
-    public Role Role { get; set; } = Role.None;
-    public Cart Cart { get; set; }
-    public int CartId { get; set; }
+    public Role Role { get; set; } = Role.User;
    
     public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
