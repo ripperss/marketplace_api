@@ -2,6 +2,7 @@
 using marketplace_api.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using marketplace_api.CustomExeption;
+using Microsoft.EntityFrameworkCore;
 
 namespace marketplace_api.Repository.UserRepository;
 
@@ -16,7 +17,7 @@ public class UserRepository : IUserRepository
         _logger = logger;
     }
 
-    public async Task<User> RegisterAsync(User user)
+    public async Task<User> CreateUserAsync(User user)
     {
         var existingUser = _context.Users.FirstOrDefault(us => us.Name == user.Name);
         if (existingUser != null)
@@ -67,5 +68,17 @@ public class UserRepository : IUserRepository
     public Task<User> UpdateUserAsync(User user)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<User> GetUserByNameAsync(string name)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Name == name);
+
+        if(user == null)
+        {
+            throw new NotFoundExeption("пользователя с данным именем не существует");
+        }
+
+        return user;
     }
 }

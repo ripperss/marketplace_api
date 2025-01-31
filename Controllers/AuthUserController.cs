@@ -2,7 +2,9 @@
 using marketplace_api.CustomExeption;
 using marketplace_api.Models;
 using marketplace_api.ModelsDto;
+using marketplace_api.Services.AuthService;
 using marketplace_api.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,17 +14,14 @@ namespace marketplace_api.Controllers;
 [Route("{controller}")]
 public class AuthUserController : ControllerBase
 {
-   private readonly IUserService _userService;
-   private  readonly IMapper _mapper;
-   private readonly ILogger<AuthUserController> _logger;    
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IMapper _mapper;
 
-    public AuthUserController(IUserService userService,IMapper mapper, ILogger<AuthUserController> logger)
+    public AuthUserController(IAuthenticationService authenticationService, IMapper mapper)
     {
-        _userService = userService;
+        _authenticationService = authenticationService;
         _mapper = mapper;
-        _logger = logger;
     }
-
 
     [HttpPost]
     [Route("reg")]
@@ -30,36 +29,49 @@ public class AuthUserController : ControllerBase
     {
         try
         {
-            var passwordHash = new PasswordHasher<UserDto>().HashPassword(userDto, userDto.HashPassword);
-            userDto.HashPassword = passwordHash;
-
             var user = _mapper.Map<User>(userDto);
-
-            user.Role = Role.User;
-
-            await _userService.RegisterUserAsync(user);
-
-            return Ok(userDto);
-        }
-        catch (NotFoundExeption ex)
-        {
-            return BadRequest(ex.Message + "Данный пользователь не найден");
+            var result = await _authenticationService.RegisterUserAsync(user);
+            return Ok(result);
         }
         catch (UserAlreadyExistsException ex)
         {
             var errorResponse = new
             {
                 ErrorCode = "USER_ALREADY_EXISTS",
-                Message = "Пользователь с такими данными уже зарегистрирован. Пожалуйста, войдите или используйте другой логин."
+                Message = "User with the given username already exists. Please log in or use a different username."
             };
             return BadRequest(errorResponse);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
         }
     }
 
     [HttpPost]
     [Route("log")]
-    public IActionResult Loggin(string hashPassword,string email)
+    public async Task<IActionResult> Login(UserDto userDto)
     {
-        return BadRequest();
+        try
+        {
+            var user = _mapper.Map<User>(userDto);
+            var token = await _authenticationService.LoginAsync(user);
+            HttpContext.Response.Cookies.Append("token", token);
+            return Ok(new { Token = token });
+        }
+        catch (NotFoundExeption ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
     }
+
+
 }
