@@ -4,58 +4,58 @@ using Microsoft.AspNetCore.JsonPatch;
 using marketplace_api.CustomExeption;
 using Microsoft.AspNetCore.Identity;
 using marketplace_api.Services.AuthService;
+using System.Net.WebSockets;
+using AutoMapper;
+using marketplace_api.ModelsDto;
 
 namespace marketplace_api.Services.UserService;
 
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    private readonly JwtService _jwtService;
     
-    public UserService(IUserRepository userRepository,JwtService jwtService)
+    public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _jwtService = jwtService;
     }
 
-    public Task DeleteUserAsync(int id)
+    public async Task DeleteUserAsync(int Id)
     {
-        throw new NotImplementedException();
+        await _userRepository.DeleteUserAsync(Id);
     }
 
-    public Task DeleteUserAsync()
+    public async Task<List<User>> GetAllUsersAsync()
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<User>> GetAllUsersAsync()
-    {
-        throw new NotImplementedException();
+        var users = await _userRepository.GetAllUsersAsync();
+        return users;
     }
 
     public Task<User> GetByIndexUserAsync(int id)
     {
-        throw new NotImplementedException();
+        var user = _userRepository.GetByIndexUserAsync(id);
+        if(user == null)
+        {
+            throw new NotFoundExeption("Пользователь не найден");
+        }
+
+        return user; 
+
     }
 
-    public Task<User> GetUserAsync()
+    public async Task<User> PatchUserAsync(JsonPatchDocument<User> user,int Id)
     {
-        throw new NotImplementedException();
-    }
+        if( user == null)
+        {
+            throw new NullReferenceException();
+        }
+        var result = await _userRepository.PatchUserAsync(user, Id);
 
-    public Task<JsonPatchDocument<User>> PatchUserAsync(JsonPatchDocument<User> user)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<User> UpdateUserAsync(User user)
-    {
-        throw new NotImplementedException();
+        return result;
     }
 
     public async Task<User> GetUserByNameAsync(string name)
     {
-        if(name == null)
+        if (name == null)
         {
             throw new ArgumentNullException("name");
         }
@@ -73,12 +73,19 @@ public class UserService : IUserService
         }
 
         var result = _userRepository.GetUserByNameAsync(user.Name);
-        if (result != null)
-        {
-            throw new UserAlreadyExistsException(user.Name);
-        }
 
         _userRepository.CreateUserAsync(user);
+        return result;
+    }
+
+    public async Task<User> UpdateUserAsync(User user, int Id)
+    {
+        if( user == null)
+        {
+            throw new ArgumentNullException("user");
+        }
+        var result = await _userRepository.UpdateUserAsync(user, Id);
+
         return result;
     }
 }
