@@ -6,11 +6,14 @@ using marketplace_api.Services.UserService;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using marketplace_api.Extenions;
+using FluentValidation;
+using marketplace_api.ModelsDto;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
+
 
 builder.Services.AddAutoMapper(typeof(UserProfiles));
 
@@ -21,22 +24,29 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .WriteTo.Console() 
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day));
 
+var connestString = builder.Configuration.GetConnectionString("DataBase");
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "redis";
+    options.InstanceName = "docker_network";
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseNpgsql("Host=postgres-db;Port=5432;Username=postgres;Password=YourStrongPassword123!;Database=marketplace;");
+    options.UseNpgsql(connestString);
 });
 
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddAuth(builder.Configuration);
-
+builder.Services.AddScoped<IValidator<UserDto>,UserDtoValidator>();
 
 var app = builder.Build();
 
 app.UseAuthentication();
-app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

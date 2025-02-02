@@ -52,7 +52,7 @@ public class AuthenticationService : IAuthenticationService
 
         if (verificationResult == PasswordVerificationResult.Success)
         {
-            var token = _jwtService.GenerateJwtToken(user);
+            var token = _jwtService.GenerateJwtToken(existingUser);
             return token;
         }
         else
