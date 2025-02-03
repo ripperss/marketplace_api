@@ -8,6 +8,8 @@ using Serilog;
 using marketplace_api.Extenions;
 using FluentValidation;
 using marketplace_api.ModelsDto;
+using marketplace_api.Services.ProductService;
+using marketplace_api.Repository.ProductRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,7 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddScoped<IValidator<UserDto>,UserDtoValidator>();
+builder.Services.AddProd();
 
 var app = builder.Build();
 

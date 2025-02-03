@@ -16,7 +16,7 @@ public class UserService : IUserService
     
     public UserService(IUserRepository userRepository)
     {
-        _userRepository = userRepository;
+        _userRepository = userRepository; 
     }
 
     public async Task DeleteUserAsync(int Id)
@@ -30,9 +30,9 @@ public class UserService : IUserService
         return users;
     }
 
-    public Task<User> GetByIndexUserAsync(int id)
+    public async Task<User> GetByIndexUserAsync(int id)
     {
-        var user = _userRepository.GetByIndexUserAsync(id);
+        var user = await _userRepository.GetByIndexUserAsync(id);
         if(user == null)
         {
             throw new NotFoundExeption("Пользователь не найден");
