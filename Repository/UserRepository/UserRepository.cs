@@ -53,7 +53,7 @@ public class UserRepository : IUserRepository
 
     public async Task<List<User>> GetAllUsersAsync()
     {
-        return _context.Users.ToList();
+        return await _context.Users.ToListAsync();
     }
 
     public async Task<User> GetByIndexUserAsync(int id)
