@@ -8,12 +8,14 @@ using Serilog;
 using marketplace_api.Extenions;
 using FluentValidation;
 using marketplace_api.ModelsDto;
-using marketplace_api.Services.ProductService;
-using marketplace_api.Repository.ProductRepository;
+using marketplace_api.CustomFilter;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<CustomRoleResourseFilter>();
+});
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
 
 
