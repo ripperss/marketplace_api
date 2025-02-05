@@ -5,6 +5,7 @@ using marketplace_api.CustomExeption;
 using Microsoft.AspNetCore.JsonPatch;
 using marketplace_api.Services.RedisService;
 using System.Text.Json;
+using marketplace_api.Repository.ProductViewHistoryRepository;
 
 namespace marketplace_api.Services.ProductService;
 
@@ -13,12 +14,18 @@ public class ProductService : IProductService
     private readonly IProductRepository _productRepository;
     private readonly IUserService _userService;
     private readonly IRedisService _redisService;
+    private readonly IProductViewHistoryRepository _productViewHistoryRepository;
 
-    public ProductService(IProductRepository productRepository,IUserService userService, IRedisService redisService)
+    public ProductService(
+        IProductRepository productRepository
+        ,IUserService userService
+        , IRedisService redisService
+        ,IProductViewHistoryRepository productViewHistoryRepository)
     {
         _productRepository = productRepository;
         _userService = userService;
         _redisService = redisService;
+        _productViewHistoryRepository = productViewHistoryRepository;
     }
 
     public async Task<Product> CreateProductAsync(Product product, int sellerId)
@@ -29,7 +36,10 @@ public class ProductService : IProductService
         }
 
         var seller = await _userService.GetByIndexUserAsync(sellerId);
-        product.Salesman = seller;
+        product.SalesmanId = sellerId;
+        product.Salesman.HashPassword = seller.HashPassword;
+        product.Salesman.Email = seller.Email;
+        product.Salesman.Name = seller.Name;
         product.SalesmanId = sellerId;
 
         var result = await _productRepository.CreateAsync(product);
@@ -44,8 +54,6 @@ public class ProductService : IProductService
         {
             throw new NotFoundExeption(" Продукт с данным Id не найден");
         }
-        //TODO нужно прописать удаление из истории просмотров 
-        //TODO нужно прописать удаление из истории покупок 
         await _productRepository.DeleteAsync(productId);
 
         var cahce = await _redisService.VerifyingExistenceOfKey("product");
@@ -78,18 +86,42 @@ public class ProductService : IProductService
         return product;
     }
 
-    public Task<Product> GetSellerProductsAsync(int userId)
+    public async Task<User> GetSellerProductsAsync(int userId,int productId)
     {
-        throw new NotImplementedException();
+        var product = await _productRepository.GetByIdAsync(productId);
+        if(product == null)
+        {
+            throw new NotFoundExeption("продукт не найден");
+        }
+
+        return product.Salesman;
     }
 
-    public Task<Product> PatchProductAsync(JsonPatchDocument<User> product, int userId)
+    public async Task<Product> PatchProductAsync(JsonPatchDocument<Product> productPatch, int productId)
     {
-        throw new NotImplementedException();
+        if(productPatch == null)
+        {
+            throw new ArgumentNullException("продукт не может быть Null");
+        }
+        var product = await _productRepository.PatchAsync(productPatch,productId);
+
+        return product;
     }
 
-    public Task<Product> UpdateProductAsync(Product product, int userId)
+    public async Task<Product> UpdateProductAsync(Product product, int productId)
     {
-        throw new NotImplementedException();
+        if (product == null) 
+        {
+            throw new ArgumentNullException("");
+        }
+        await _productRepository.UpdateAsync(product, productId);
+
+        var cahce = await _redisService.VerifyingExistenceOfKey("product");
+        if (cahce)
+        {
+            var result = await _redisService.DeleteValueCasheAsync(productId.ToString(), product);
+        }
+
+        return product; 
     }
 }

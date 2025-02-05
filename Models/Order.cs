@@ -13,7 +13,4 @@ public class Order
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
     public ICollection<OrderProduct> Products { get; set; } = new List<OrderProduct>();
-
-
-
 }

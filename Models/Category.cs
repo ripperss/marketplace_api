@@ -1,9 +1,8 @@
-﻿namespace marketplace_api.Models
+﻿namespace marketplace_api.Models;
+
+public enum Category
 {
-    public enum Category
-    {
-        food,
-        electricalEngineer,
-        accessories
-    }
+    food,
+    electricalEngineer,
+    accessories
 }

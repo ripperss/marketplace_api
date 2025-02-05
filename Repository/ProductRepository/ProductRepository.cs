@@ -47,6 +47,8 @@ public class ProductRepository : IProductRepository
         {
             throw new NotFoundExeption("Данного продукта нет");
         }
+        product.CountViewProduct++;
+        await _context.SaveChangesAsync();
 
         return product;
     }

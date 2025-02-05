@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace marketplace_api.CustomFilter;
 
-public class CustomRoleResourseFilter : IAsyncActionFilter
+public class CustomRoleActionFilter : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
