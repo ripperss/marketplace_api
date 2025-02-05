@@ -21,5 +21,9 @@ public class ExceptionHandlingMiddleware
         {
             await context.Response.WriteAsync("An unexpected error occurred.");
         }
+        catch (UserAlreadyExistsException ex)
+        {
+            await context.Response.WriteAsync($"Error: {ex.Message}");
+        }
     }
 }

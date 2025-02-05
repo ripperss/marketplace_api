@@ -9,17 +9,22 @@ using marketplace_api.Extenions;
 using FluentValidation;
 using marketplace_api.ModelsDto;
 using marketplace_api.CustomFilter;
+using marketplace_api.Services.RedisService;
+using marketplace_api.MappingProfiles;
+using marketplace_api.Repository.ProductViewHistoryRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add<CustomRoleResourseFilter>();
+    options.Filters.Add<CustomRoleActionFilter>();
+    options.Filters.Add<CustomSessiontokenResousreFilter>();
 });
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
 
 
-builder.Services.AddAutoMapper(typeof(UserProfiles));
+builder.Services.AddAutoMapper(typeof(UserProfiles),typeof(ProductProfiles));
+
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration) 
@@ -46,6 +51,9 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddScoped<IValidator<UserDto>,UserDtoValidator>();
+builder.Services.AddScoped<IValidator<ProductDto>,ProductDtoValidator>();
+builder.Services.AddScoped<IRedisService, RedisService>();
+builder.Services.AddScoped<IProductViewHistoryRepository,ProductViewHistoryRepository>();
 builder.Services.AddProd();
 
 var app = builder.Build();

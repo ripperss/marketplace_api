@@ -11,7 +11,7 @@ public class Product
     public decimal Price { get; set; } = decimal.Zero;
     public Category Category { get; set; }
     public int SalesmanId { get; set; } 
-    public User Salesman { get; set; }
+    public User Salesman { get; set; } 
     public int CountProduct { get; set; }
     public int CountViewProduct { get; set; }
 
