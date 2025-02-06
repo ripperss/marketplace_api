@@ -27,14 +27,6 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
-        
-
-        // Связь Product ↔ User (Продавец)
-        modelBuilder.Entity<Product>()
-            .HasOne(p => p.Salesman)
-            .WithMany()
-            .HasForeignKey(p => p.SalesmanId);
 
         // Связь Review ↔ Product и User
         modelBuilder.Entity<Review>()
