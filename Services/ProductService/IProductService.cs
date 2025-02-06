@@ -10,6 +10,7 @@ public interface IProductService
     Task<Product> CreateProductAsync(Product product,int sellerId);
     Task<Product> UpdateProductAsync(Product product,int productId);
     Task DeleteProductAsync(int productId);
-    Task<User> GetSellerProductsAsync(int userId,int productId);
+    Task<User> GetSellerProductsAsync(int productId);
     Task<Product> PatchProductAsync(JsonPatchDocument<Product> productPatch,int productId);
+    public Task<ICollection<Product>> GetProductByNameAsync(string name);
 }
