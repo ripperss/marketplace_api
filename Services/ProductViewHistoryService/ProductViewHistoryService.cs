@@ -1,15 +1,21 @@
 ﻿using marketplace_api.Models;
 using marketplace_api.Repository.ProductViewHistoryRepository;
+using marketplace_api.Services.ProductService;
+using marketplace_api.Services.UserService;
 
 namespace marketplace_api.Services.ProductViewHistoryService;
 
 public class ProductViewHistoryService : IProductViewHistoryService
 {
     private readonly IProductViewHistoryRepository _productViewHistoryRepository;
+    private readonly IProductService _productService;
 
-    public ProductViewHistoryService(IProductViewHistoryRepository productViewHistoryRepository)
+    public ProductViewHistoryService(
+        IProductViewHistoryRepository productViewHistoryRepository
+        , IProductService productService)
     {
         _productViewHistoryRepository = productViewHistoryRepository;
+        _productService = productService;
     }
 
     public async Task AddHistoryAsync(Product product, int userId)
@@ -18,12 +24,15 @@ public class ProductViewHistoryService : IProductViewHistoryService
         {
             throw new ArgumentNullException();
         }
+        var productDb = await _productService.GetProductAsync(product.Id);
 
-        await _productViewHistoryRepository.AddProducthistory(userId, product);
+        await _productViewHistoryRepository.AddProducthistory(userId, productDb);
     }
 
     public async Task DeleteHistoryAsync(int userId, int productId)
     {
+        var product = await _productService.GetProductAsync(productId); 
+        
         await _productViewHistoryRepository.DeleteProducthistory(userId,productId);
     }
 
@@ -43,6 +52,8 @@ public class ProductViewHistoryService : IProductViewHistoryService
 
     public async Task UpdateHistoryAsync(Product product, int userId,int productId)
     {
-        await _productViewHistoryRepository.UpdateProducthistory(userId,product,productId);
+        var result = await _productService.GetProductAsync(productId);
+        
+        await _productViewHistoryRepository.UpdateProducthistory(userId,result,productId);
     }
 }

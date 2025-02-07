@@ -61,6 +61,19 @@ public class ProductViewHistoryRepository : IProductViewHistoryRepository
         return viewHistories.Select(h => h.Product).ToList();
     }
 
+    public async Task<Product> GetProduct(int userId, int productId)
+    {
+        var product = await _appDbContext.ProductViewHistories
+            .FirstOrDefaultAsync(history => history.UserId == userId && history.ProductId == productId);
+
+        if(product == null)
+        {
+            throw new NotFoundExeption("Данного продукта нет в истории");
+        }
+
+        return product.Product;
+    }
+
     public async Task UpdateProducthistory(int userId, Product product,int productId)
     {
         var viewHistory = await _appDbContext.ProductViewHistories

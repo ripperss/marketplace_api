@@ -12,6 +12,7 @@ using marketplace_api.CustomFilter;
 using marketplace_api.Services.RedisService;
 using marketplace_api.MappingProfiles;
 using marketplace_api.Repository.ProductViewHistoryRepository;
+using marketplace_api.Services.ProductViewHistoryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddAuth(builder.Configuration);
+builder.Services.AddScoped<IProductViewHistoryService,ProductViewHistoryService>();
 builder.Services.AddScoped<IValidator<UserDto>,UserDtoValidator>();
 builder.Services.AddScoped<IValidator<ProductDto>,ProductDtoValidator>();
 builder.Services.AddScoped<IRedisService, RedisService>();

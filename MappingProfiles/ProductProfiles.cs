@@ -9,5 +9,7 @@ public class ProductProfiles : Profile
     public ProductProfiles()
     {
         CreateMap<ProductDto, Product>();
+
+        CreateMap<Product, ProductDto>();
     }
 }

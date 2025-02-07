@@ -27,8 +27,8 @@ public class ProductController : ControllerBase
         , IMapper mapper
         , IValidator<ProductDto> validator
         , JwtService jwtService
-        ,ILogger<ProductController> logger
-        ,IProductViewHistoryService productViewHistoryService)
+        , ILogger<ProductController> logger
+        , IProductViewHistoryService productViewHistoryService)
     {
         _productService = productService;
         _mapper = mapper;
@@ -79,7 +79,7 @@ public class ProductController : ControllerBase
 
             var userId = _jwtService.GetIdUser(HttpContext);
             
-            await _productViewHistoryService.AddHistoryAsync(product,userId);
+            await _productViewHistoryService.AddHistoryAsync(product, userId);
 
             return Ok(_mapper.Map<ProductDto>(product));
         }
@@ -127,6 +127,9 @@ public class ProductController : ControllerBase
             var product = _mapper.Map<Product>(productDto);
 
             var newProduct = await _productService.UpdateProductAsync(product, productId);
+
+            var userId = _jwtService.GetIdUser(HttpContext);
+            await _productViewHistoryService.UpdateHistoryAsync(product, userId,productId);
 
             _logger.LogInformation("Продукт с ID {ProductId} успешно обновлен", productId);
             return Ok(newProduct);
@@ -197,4 +200,23 @@ public class ProductController : ControllerBase
         }
     }
 
+    [HttpDelete]
+    [Route("del/{productId:int}")]
+    [Authorize(Roles = "Admin,Seller")]
+    public async Task<IActionResult> DeleteProductAsync(int productId)
+    {
+        try
+        {
+            await _productService.DeleteProductAsync(productId);
+            //TODO нужно еще будет удалять из истории покупок
+            var userId =  _jwtService.GetIdUser(HttpContext);
+            await _productViewHistoryService.DeleteHistoryAsync(userId,productId);
+
+            return NotFound();
+        }
+        catch (NotFoundExeption ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }
