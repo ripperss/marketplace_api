@@ -12,4 +12,5 @@ public interface IProductRepository
     public Task DeleteAsync(int id);
     public Task<Product> PatchAsync(JsonPatchDocument<Product> productDto,int id);
     public Task<ICollection<Product>> GetByName(string name);
+    public Task<List<Product>> GetProductOdPage(int id);
 }

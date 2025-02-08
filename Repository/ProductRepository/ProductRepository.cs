@@ -66,6 +66,18 @@ public class ProductRepository : IProductRepository
         return await products.ToListAsync();
     }
 
+    public  async Task<List<Product>> GetProductOdPage(int id)
+    {
+        int lengthPage = 10;
+        int skip = (id - 1) * lengthPage;
+        var page = await _context.Products
+            .Skip(skip)
+            .Take(lengthPage)
+            .ToListAsync();
+
+        return page;
+    }
+
     public async Task<Product> PatchAsync(JsonPatchDocument<Product> productDto,int id)
     {
         var product = await _context.Products.FindAsync(id);
