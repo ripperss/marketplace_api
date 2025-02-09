@@ -77,9 +77,11 @@ public class ProductController : ControllerBase
         {
             var product = await _productService.GetProductAsync(productId);
 
-            var userId = _jwtService.GetIdUser(HttpContext);
-            
-            await _productViewHistoryService.AddHistoryAsync(product, userId);
+            if (!(HttpContext.Request.Cookies["role"] == Role.anonimus.ToString()))
+            {
+                var userId = _jwtService.GetIdUser(HttpContext);
+                await _productViewHistoryService.AddHistoryAsync(product, userId);
+            }
 
             return Ok(_mapper.Map<ProductDto>(product));
         }
