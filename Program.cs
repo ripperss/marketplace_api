@@ -13,6 +13,9 @@ using marketplace_api.Services.RedisService;
 using marketplace_api.MappingProfiles;
 using marketplace_api.Repository.ProductViewHistoryRepository;
 using marketplace_api.Services.ProductViewHistoryService;
+using marketplace_api.Repository.CartRepository;
+using Org.BouncyCastle.Asn1.Cms.Ecc;
+using marketplace_api.Services.CartService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +60,8 @@ builder.Services.AddScoped<IValidator<ProductDto>,ProductDtoValidator>();
 builder.Services.AddScoped<IRedisService, RedisService>();
 builder.Services.AddScoped<IProductViewHistoryRepository,ProductViewHistoryRepository>();
 builder.Services.AddProd();
+builder.Services.AddScoped<ICartRepository,CartRepository>();   
+builder.Services.AddScoped<ICartService,CartService>();
 
 var app = builder.Build();
 

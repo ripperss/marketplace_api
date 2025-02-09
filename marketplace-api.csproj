@@ -31,8 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\CartRepository\" />
-    <Folder Include="Services\CartService\" />
     <Folder Include="wwwroot\UploadImages\" />
   </ItemGroup>
 
