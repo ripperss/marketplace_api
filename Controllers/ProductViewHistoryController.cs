@@ -36,7 +36,7 @@ public class ProductViewHistoryController : ControllerBase
 
     [HttpGet]
     [Route("history")]
-    [Authorize(Roles ="Admin,User")]
+    [Authorize(Roles ="Admin,User,Seller")]
     public async Task<IActionResult> GetHistory()
     {
         try
@@ -58,7 +58,7 @@ public class ProductViewHistoryController : ControllerBase
 
     [HttpPost]
     [Route("add_history/{productId}")]
-    [Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin,User,Seller")]
     public async Task<IActionResult> AddProductHistoryAsync(ProductDto productDto,int productId)
     {
         try
@@ -87,7 +87,7 @@ public class ProductViewHistoryController : ControllerBase
 
     [HttpDelete]
     [Route("del/{productId}")]
-    [Authorize(Roles = "User,Admin")]
+    [Authorize(Roles = "User,Admin,Seller")]
     public async Task<IActionResult> DeleteProductOfHistoryAsync(int productId)
     {
         try
@@ -112,7 +112,7 @@ public class ProductViewHistoryController : ControllerBase
 
     [HttpGet]
     [Route("pr_history/{productId}")]
-    [Authorize(Roles = "User, Admin")]
+    [Authorize(Roles = "User, Admin, Seller")]
     public async Task<IActionResult> GetProductOfHistory(int productId)
     {
         try

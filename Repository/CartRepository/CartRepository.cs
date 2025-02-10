@@ -18,23 +18,26 @@ public class CartRepository : ICartRepository
     {
         var cart = await GetUserCartAsync(userId);
 
-        var product = await _context.Products
-            .FindAsync(productId);
-        var cartproduct = cart.CartProducts.FirstOrDefault(prd => prd.ProductId == productId);
+        var product = await _context.Products.FindAsync(productId);
+        if (product == null)
+            throw new NotFoundExeption("Product not found");
 
-        if (cartproduct == null)
+        var cartProduct = cart.CartProducts.FirstOrDefault(prd => prd.ProductId == productId);
+
+        if (cartProduct == null)
         {
-            var cartProduct = new CartProduct()
+            cartProduct = new CartProduct()
             {
                 CartId = cart.Id,
                 ProductId = productId,
-                Quantity = 1
+                Quantity = 1,
+                Product = product
             };
             cart.CartProducts.Add(cartProduct);
         }
         else
         {
-            cartproduct.Quantity++;
+            cartProduct.Quantity++;
         }
 
         await _context.SaveChangesAsync();
@@ -79,93 +82,52 @@ public class CartRepository : ICartRepository
         return cart;
     }
 
-    public async Task<List<Product>> GetGageProductAsync(int userId, int page)
+    public async Task<List<CartProduct>> GetGageProductAsync(int userId, int page)
     {
-        const int pageSize = 5; 
-        int skip = pageSize * (page - 1); 
+        const int pageSize = 5;
+        int skip = pageSize * (page - 1);
 
-        var userCart = await _context.Carts
-            .Include(c => c.CartProducts) 
-            .FirstOrDefaultAsync(c => c.UserId == userId);
+        var userCart = await GetUserCartAsync(userId);
 
-        if (userCart == null)
-        {
-            throw new NotFoundExeption($"Корзина для пользователя с ID {userId} не найдена.");
-        }
-
-        var productIds = userCart.CartProducts
+        return userCart.CartProducts
             .Skip(skip)
             .Take(pageSize)
-            .Select(cp => cp.ProductId)
             .ToList();
-
-        var products = await _context.Products
-            .Where(p => productIds.Contains(p.Id))
-            .ToListAsync();
-
-        return products;
     }
 
-    public async Task<Product> GetProductoFCartAsync(int userId, int productId)
+    public async Task<CartProduct> GetProductoFCartAsync(int userId, int productId)
     {
-        var cart = await _context.Carts
-            .Include(c => c.CartProducts)
-            .FirstOrDefaultAsync(c => c.UserId == userId);
-        if (cart == null)
-        {
-            throw new NotFoundExeption("корзина не найдена");
-        }
+        var cart = await GetUserCartAsync(userId);
 
-        var cartProduct = cart.CartProducts.FirstOrDefault(c => c.ProductId == productId);
+        var cartProduct = cart.CartProducts
+            .FirstOrDefault(c => c.ProductId == productId);
+
         if (cartProduct == null)
-        {
-            throw new NotFoundExeption("продукт  не найден");
-        }
-        
-        var product = await _context.Products.FindAsync(productId);
-        return product;
+            throw new NotFoundExeption("Product not found in cart");
+
+        return cartProduct;
     }
 
     public async Task UpdateAsync(Cart cart, int userId)
     {
-        var cartDb = await _context.Carts
-            .Include(c => c.CartProducts)
-            .FirstOrDefaultAsync(c => c.UserId == userId);
-        if(cartDb == null)
-        {
-            throw new NotFoundExeption("корзина не найдена");
-        }
+        var cartDb = await GetUserCartAsync(userId);
 
         cartDb.CartProducts = cart.CartProducts;
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Product>> GetAllProductsAsync(int userId)
+    public async Task<List<CartProduct>> GetAllProductsAsync(int userId)
     {
         var userCart = await GetUserCartAsync(userId);
-
-        var productIds = userCart.CartProducts
-            .Select(cp => cp.ProductId)
-            .ToList();
-
-        var products = await _context.Products
-            .Where(p => productIds.Contains(p.Id))
-            .ToListAsync();
-
-        return products;
+        return userCart.CartProducts.ToList();
     }
 
     private async Task<Cart> GetUserCartAsync(int userId)
     {
-        var cart = await _context.Carts
+        return await _context.Carts
             .Include(c => c.CartProducts)
-            .FirstOrDefaultAsync(c => c.UserId == userId);
-
-        if (cart == null)
-        {
-            throw new NotFoundExeption($"Корзина для пользователя с ID {userId} не найдена.");
-        }
-
-        return cart;
+            .ThenInclude(cp => cp.Product) 
+            .FirstOrDefaultAsync(c => c.UserId == userId)
+            ?? throw new NotFoundExeption($"Cart for user {userId} not found");
     }
 }

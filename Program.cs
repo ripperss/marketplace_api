@@ -14,8 +14,8 @@ using marketplace_api.MappingProfiles;
 using marketplace_api.Repository.ProductViewHistoryRepository;
 using marketplace_api.Services.ProductViewHistoryService;
 using marketplace_api.Repository.CartRepository;
-using Org.BouncyCastle.Asn1.Cms.Ecc;
 using marketplace_api.Services.CartService;
+using MailKit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +62,7 @@ builder.Services.AddScoped<IProductViewHistoryRepository,ProductViewHistoryRepos
 builder.Services.AddProd();
 builder.Services.AddScoped<ICartRepository,CartRepository>();   
 builder.Services.AddScoped<ICartService,CartService>();
+builder.Services.AddScoped<marketplace_api.Services.MailService>();
 
 var app = builder.Build();
 
