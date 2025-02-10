@@ -42,6 +42,7 @@ public class AuthenticationService : IAuthenticationService
         }
 
         var existingUser = await _userRepository.GetUserByNameAsync(user.Name);
+        existingUser.Role = user.Role;
         if (existingUser == null)
         {
             throw new NotFoundExeption("User not found");

@@ -23,8 +23,6 @@ public class AppDbContext : DbContext
         _configuration = configuration;
     }
 
-    
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
