@@ -1,48 +1,81 @@
 ﻿using marketplace_api.Models;
 using marketplace_api.Repository.CartRepository;
-using marketplace_api.Services.RedisService;
+using marketplace_api.Services.ProductService;
+using marketplace_api.CustomExeption;
+using marketplace_api.Services.UserService;
 
 namespace marketplace_api.Services.CartService;
 
 public class CartService : ICartService
 {
     private readonly ICartRepository _cartRepository;
-    private readonly IRedisService _redisService;
+    private readonly IUserService _userService;
 
-    public CartService(ICartRepository cartRepository, IRedisService redisService)
+    public CartService(ICartRepository cartRepository, IUserService  userService)
     {
         _cartRepository = cartRepository;
-        _redisService = redisService;
+        _userService = userService;
     }
 
-    public Task CreateCartProductAsync(Product product, int userId)
+    public async Task AddCartProductAsync(int productId, int userId)
     {
-        throw new NotImplementedException();
+        if (productId <= 0)
+        {
+            throw new ArgumentException("индекс продукта не должен быть меньше нуля");
+        }
+        await _cartRepository.AddProductAsync(productId, userId);
     }
 
-    public Task DeleteCartProductAsync(int productId, int userId)
+    public async Task<bool> CreateCartAsync(int userId)
     {
-        throw new NotImplementedException();
+        var user = await _userService.GetByIndexUserAsync(userId);
+        
+        var cart = new Cart()
+        {
+            UserId = userId
+        };
+        var success = await _cartRepository.CreateAsync(cart, user.Id);
+
+        return success;
+
+        
     }
 
-    public Task<List<CartProduct>> GetCarAlltProductsAsync(int userId)
+    public async Task DeleteCartProductAsync(int productId, int userId)
     {
-        throw new NotImplementedException();
+        await _cartRepository.DeleteProductAsync(userId, productId);
     }
 
-    public Task<Cart> GetCartAsync(int productId, int userId)
+    public async Task<List<CartProduct>> GetCarAlltProductsAsync(int userId)
     {
-        throw new NotImplementedException();
+        var cartProduct = await _cartRepository.GetAllProductsAsync(userId);
+
+        return cartProduct;
+    }
+
+    public async Task<Cart> GetCartAsync(int userId)
+    {
+        var cart = await _cartRepository.GetCartAsync(userId);
+
+        return cart;
     }
 
     public async Task<CartProduct> GetCartProductAsync(int productId, int userId)
     {
-        var cartProduct = await _cartRepository.GetProductoFCartAsync(userId, productId);
+        var cartProduct = await GetCartProductAsync(productId, userId);
+
         return cartProduct;
     }
 
-    public Task<List<CartProduct>> GetProductCartPageAsync(int productId, int userId, int page)
+    public async Task<List<CartProduct>> GetProductCartPageAsync(int productId, int userId, int page)
     {
-        throw new NotImplementedException();
+        if (page <= 0)
+        {
+            throw new Exception("номер страницы должен быть больше 0");
+        }
+
+        var cartProduct = await GetProductCartPageAsync(productId, userId, page);
+
+        return cartProduct;
     }
 }

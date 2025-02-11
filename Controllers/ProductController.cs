@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Hangfire;
 using marketplace_api.CustomExeption;
 using marketplace_api.Models;
 using marketplace_api.ModelsDto;
@@ -80,7 +81,8 @@ public class ProductController : ControllerBase
             if (!(HttpContext.Request.Cookies["role"] == Role.anonimus.ToString()))
             {
                 var userId = _jwtService.GetIdUser(HttpContext);
-                await _productViewHistoryService.AddHistoryAsync(product, userId);
+
+                BackgroundJob.Enqueue(() => _productViewHistoryService.AddHistoryAsync(product,userId));
             }
 
             return Ok(_mapper.Map<ProductDto>(product));
@@ -186,7 +188,7 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("saller{productId}")]
     public async Task<IActionResult> GetSallerAsync(int productId)
     {

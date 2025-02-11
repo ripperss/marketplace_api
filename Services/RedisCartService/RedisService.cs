@@ -163,4 +163,18 @@ public class RedisService : IRedisService
         var key = $"cart:{sessionToken}";
         await _redisCache.RemoveAsync(key);
     }
+
+    public async Task<List<CartProduct>> GetAllCartProduct(string sessionToken)
+    {
+        if (string.IsNullOrEmpty(sessionToken))
+        {
+            throw new ArgumentNullException(nameof(sessionToken));
+        }
+
+        var cart = await GetCartProductsAsync(sessionToken);
+
+        var cartProducts = cart.CartProducts.ToList();
+
+        return cartProducts;
+    }
 }

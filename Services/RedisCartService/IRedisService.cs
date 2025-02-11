@@ -15,4 +15,6 @@ public interface IRedisService
     Task<List<CartProduct>> GetPaginatedCartProductsAsync(string sessionToken, int pageNumber, int pageSize);
 
     Task DeleteAllCartAsync(string sessionToken);
+
+    Task<List<CartProduct>> GetAllCartProduct(string sessionToken);
 }

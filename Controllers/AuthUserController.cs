@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Hangfire;
 using marketplace_api.CustomExeption;
 using marketplace_api.Models;
 using marketplace_api.ModelsDto;
 using marketplace_api.Services.AuthService;
+using marketplace_api.Services.CartService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace marketplace_api.Controllers;
@@ -15,15 +17,18 @@ public class AuthUserController : ControllerBase
     private readonly IAuthenticationService _authenticationService;
     private readonly IValidator<UserDto> _validator; 
     private readonly IMapper _mapper;
+    private readonly ICartService _cartService;
 
     public AuthUserController(
         IAuthenticationService authenticationService
         ,IMapper mapper
-        ,IValidator<UserDto> validator)
+        ,IValidator<UserDto> validator
+        , ICartService cartService)
     {
         _authenticationService = authenticationService;
         _mapper = mapper;
         _validator = validator;
+        _cartService = cartService;
     }
 
     [HttpPost]
@@ -39,6 +44,7 @@ public class AuthUserController : ControllerBase
             }
             var user = _mapper.Map<User>(userDto);
             var result = await _authenticationService.RegisterUserAsync(user);
+
             return Ok(result);
         }
 

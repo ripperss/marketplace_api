@@ -2,6 +2,7 @@
 using marketplace_api.Data;
 using marketplace_api.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyModel.Resolution;
 
 namespace marketplace_api.Repository.CartRepository;
 
@@ -44,16 +45,18 @@ public class CartRepository : ICartRepository
 
     }
 
-    public async Task CreateAsync(Cart cart, int userId)
+    public async Task<bool> CreateAsync(Cart cart, int userId)
     {
         var cartDb = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
         if (cartDb != null)
         {
-            throw new UserAlreadyExistsException("уже у это пользователя есть корзина");
+            return false;
         }
 
         await _context.Carts.AddAsync(cart);
         await _context.SaveChangesAsync();
+
+        return true;
     }
 
     public async Task DeleteAsync(int userId)
@@ -126,8 +129,28 @@ public class CartRepository : ICartRepository
     {
         return await _context.Carts
             .Include(c => c.CartProducts)
-            .ThenInclude(cp => cp.Product) 
-            .FirstOrDefaultAsync(c => c.UserId == userId)
-            ?? throw new NotFoundExeption($"Cart for user {userId} not found");
+            .ThenInclude(cp => cp.Product)
+            .FirstOrDefaultAsync(c => c.UserId == userId) ??
+            throw new NotFoundExeption("Корзина не создана");
+    }
+
+    public async Task DeleteProductAsync(int userId, int productId)
+    {
+        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId); if (cart == null)
+        {
+            throw new NotFoundExeption("данный пользователь не найден");
+        }
+        var product = await _context.Products.FirstOrDefaultAsync(pr => pr.Id == productId);
+        if (product == null)
+        {
+            throw new NotFoundExeption("данный продукт не существует");
+        }
+        var cartProduct = cart.CartProducts.FirstOrDefault(cp => cp.ProductId == productId);
+        if (cartProduct == null)
+        {
+            throw new NotFoundExeption("Данного продукта нет в корзине");
+        }
+        cart.CartProducts.Remove(cartProduct);
+        await _context.SaveChangesAsync();
     }
 }
