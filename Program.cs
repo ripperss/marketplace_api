@@ -15,7 +15,9 @@ using marketplace_api.Repository.ProductViewHistoryRepository;
 using marketplace_api.Services.ProductViewHistoryService;
 using marketplace_api.Repository.CartRepository;
 using marketplace_api.Services.CartService;
-using MailKit;
+using Hangfire.PostgreSql;
+using Hangfire;
+using marketplace_api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connestString);
 });
 
+builder.Services.AddHangfire(h =>
+    h.UsePostgreSqlStorage(connestString));
+builder.Services.AddHangfireServer();
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
@@ -68,6 +73,11 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHangfireDashboard("/dash", new DashboardOptions
+{
+    Authorization = new[] { new AllowAllUsersAuthorizationFilter() }
+});
 
 app.MapControllerRoute(
     name: "default",

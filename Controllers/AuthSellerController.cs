@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Hangfire;
 using marketplace_api.CustomExeption;
 using marketplace_api.Models;
 using marketplace_api.ModelsDto;
@@ -53,7 +54,7 @@ public class AuthSellerController : ControllerBase
             HttpContext.Response.Cookies.Append("token", token);
             _logger.LogInformation("Успешная аутентификация продавца {UserId}", user.Id);
 
-             //_mail.SendEmailAsync("вы успешно прогли аутификацию на подовца", userDto.Email);
+             //BackgroundJob.Enqueue(() => _mail.SendEmailAsync("вы успешно прогли аутификацию на подовца", userDto.Email));
 
             return Ok();
         }

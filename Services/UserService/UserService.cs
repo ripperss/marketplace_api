@@ -2,11 +2,7 @@
 using marketplace_api.Repository.UserRepository;
 using Microsoft.AspNetCore.JsonPatch;
 using marketplace_api.CustomExeption;
-using Microsoft.AspNetCore.Identity;
-using marketplace_api.Services.AuthService;
-using System.Net.WebSockets;
-using AutoMapper;
-using marketplace_api.ModelsDto;
+using marketplace_api.Services.CartService;
 
 namespace marketplace_api.Services.UserService;
 
@@ -16,7 +12,7 @@ public class UserService : IUserService
     
     public UserService(IUserRepository userRepository)
     {
-        _userRepository = userRepository; 
+        _userRepository = userRepository;
     }
 
     public async Task DeleteUserAsync(int Id)
@@ -65,16 +61,16 @@ public class UserService : IUserService
         return user;
     }
 
-    public Task<User> CreateUserAsync(User user)
+    public async Task<User> CreateUserAsync(User user)
     {
         if (user == null)
         {
             throw new ArgumentNullException("user");
         }
 
-        var result = _userRepository.GetUserByNameAsync(user.Name);
+        var result = await _userRepository.GetUserByNameAsync(user.Name);
 
-        _userRepository.CreateUserAsync(user);
+        await _userRepository.CreateUserAsync(user);
         return result;
     }
 
