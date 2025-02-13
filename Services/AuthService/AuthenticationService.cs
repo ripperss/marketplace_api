@@ -38,7 +38,7 @@ public class AuthenticationService : IAuthenticationService
         user.HashPassword = passwordHasher.HashPassword(user, user.HashPassword);
 
         await _userService.CreateUserAsync(user);
-        
+
         return "Пользователб создан";
     }
 
@@ -66,11 +66,17 @@ public class AuthenticationService : IAuthenticationService
             
         }
 
+        CreateOrUpdateCart();
         BackgroundJob.Enqueue(() => _cartService.CreateCartAsync(existingUser.Id));
         
         
         var token = _jwtService.GenerateJwtToken(existingUser);
         return token;
+    }
+
+    private async Task CreateOrUpdateCart()
+    {
+
     }
 }
 /*

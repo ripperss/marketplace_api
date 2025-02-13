@@ -9,12 +9,10 @@ namespace marketplace_api.Services.CartService;
 public class CartService : ICartService
 {
     private readonly ICartRepository _cartRepository;
-    private readonly IUserService _userService;
 
     public CartService(ICartRepository cartRepository, IUserService  userService)
     {
         _cartRepository = cartRepository;
-        _userService = userService;
     }
 
     public async Task AddCartProductAsync(int productId, int userId)
@@ -28,13 +26,12 @@ public class CartService : ICartService
 
     public async Task<bool> CreateCartAsync(int userId)
     {
-        var user = await _userService.GetByIndexUserAsync(userId);
         
         var cart = new Cart()
         {
             UserId = userId
         };
-        var success = await _cartRepository.CreateAsync(cart, user.Id);
+        var success = await _cartRepository.CreateAsync(cart, userId);
 
         return success;
 

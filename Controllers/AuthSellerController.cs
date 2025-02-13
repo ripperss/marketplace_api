@@ -54,7 +54,7 @@ public class AuthSellerController : ControllerBase
             HttpContext.Response.Cookies.Append("token", token);
             _logger.LogInformation("Успешная аутентификация продавца {UserId}", user.Id);
 
-             //BackgroundJob.Enqueue(() => _mail.SendEmailAsync("вы успешно прогли аутификацию на подовца", userDto.Email));
+            BackgroundJob.Enqueue(() => _mail.SendEmailAsync("вы успешно прогли аутификацию на подовца", userDto.Email));
 
             return Ok();
         }

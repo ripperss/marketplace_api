@@ -4,6 +4,7 @@ using Hangfire;
 using marketplace_api.CustomExeption;
 using marketplace_api.Models;
 using marketplace_api.ModelsDto;
+using marketplace_api.Services;
 using marketplace_api.Services.AuthService;
 using marketplace_api.Services.CartService;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +19,20 @@ public class AuthUserController : ControllerBase
     private readonly IValidator<UserDto> _validator; 
     private readonly IMapper _mapper;
     private readonly ICartService _cartService;
+    private readonly MailService _mailService;
 
     public AuthUserController(
         IAuthenticationService authenticationService
         ,IMapper mapper
         ,IValidator<UserDto> validator
-        , ICartService cartService)
+        , ICartService cartService
+        , MailService mailService)
     {
         _authenticationService = authenticationService;
         _mapper = mapper;
         _validator = validator;
         _cartService = cartService;
+        _mailService = mailService;
     }
 
     [HttpPost]
@@ -44,6 +48,8 @@ public class AuthUserController : ControllerBase
             }
             var user = _mapper.Map<User>(userDto);
             var result = await _authenticationService.RegisterUserAsync(user);
+
+            BackgroundJob.Enqueue(() => _mailService.SendEmailAsync("Вы успешно зарегались под именем окунь поздравляю",userDto.Email ));
 
             return Ok(result);
         }
@@ -78,6 +84,9 @@ public class AuthUserController : ControllerBase
             var user = _mapper.Map<User>(userDto);
             var token = await _authenticationService.LoginAsync(user);
             HttpContext.Response.Cookies.Append("token", token);
+
+            BackgroundJob.Enqueue(() => _mailService.SendEmailAsync("мистер окунь вы успешно залогинились",userDto.Email));
+
             return Ok();
         }
 

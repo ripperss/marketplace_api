@@ -68,10 +68,8 @@ public class UserService : IUserService
             throw new ArgumentNullException("user");
         }
 
-        var result = await _userRepository.GetUserByNameAsync(user.Name);
-
         await _userRepository.CreateUserAsync(user);
-        return result;
+        return user;
     }
 
     public async Task<User> UpdateUserAsync(User user, int Id)
