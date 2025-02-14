@@ -9,12 +9,10 @@ namespace marketplace_api.Services.CartService;
 public class CartService : ICartService
 {
     private readonly ICartRepository _cartRepository;
-    private readonly IUserService _userService;
 
-    public CartService(ICartRepository cartRepository, IUserService  userService)
+    public CartService(ICartRepository cartRepository)
     {
         _cartRepository = cartRepository;
-        _userService = userService;
     }
 
     public async Task AddCartProductAsync(int productId, int userId)
@@ -28,13 +26,12 @@ public class CartService : ICartService
 
     public async Task<bool> CreateCartAsync(int userId)
     {
-        var user = await _userService.GetByIndexUserAsync(userId);
         
         var cart = new Cart()
         {
             UserId = userId
         };
-        var success = await _cartRepository.CreateAsync(cart, user.Id);
+        var success = await _cartRepository.CreateAsync(cart, userId);
 
         return success;
 
@@ -62,7 +59,7 @@ public class CartService : ICartService
 
     public async Task<CartProduct> GetCartProductAsync(int productId, int userId)
     {
-        var cartProduct = await GetCartProductAsync(productId, userId);
+        var cartProduct = await _cartRepository.GetProductoFCartAsync(userId, productId);
 
         return cartProduct;
     }
@@ -74,8 +71,15 @@ public class CartService : ICartService
             throw new Exception("номер страницы должен быть больше 0");
         }
 
-        var cartProduct = await GetProductCartPageAsync(productId, userId, page);
+        var cartProduct = await _cartRepository.GetGageProductAsync(userId, page);
 
         return cartProduct;
+    }
+
+    public async Task UpdateCartAsync(int userId, Cart newCart)
+    {
+        var cart = await _cartRepository.GetCartAsync(userId);
+
+        await _cartRepository.UpdateAsync(newCart, userId);
     }
 }

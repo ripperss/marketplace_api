@@ -27,19 +27,19 @@ public class CustomRoleActionFilter : IAsyncActionFilter
                 else
                 {
                     context.HttpContext.Response.Cookies
-                        .Append("role", "anonymous", new CookieOptions() { HttpOnly = true, Path = "/" });
+                        .Append("role", "anonimus", new CookieOptions() { HttpOnly = true, Path = "/" });
                 }
             }
             catch
             {
                 context.HttpContext.Response.Cookies
-                    .Append("role", "anonymous", new CookieOptions() { HttpOnly = true, Path = "/" });
+                    .Append("role", "anonimus", new CookieOptions() { HttpOnly = true, Path = "/" });
             }
         }
         else
         {
             context.HttpContext.Response.Cookies
-                .Append("role", "anonymous", new CookieOptions() { HttpOnly = true, Path = "/" });
+                .Append("role", "anonimus", new CookieOptions() { HttpOnly = true, Path = "/" });
         }
 
         await next();

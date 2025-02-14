@@ -78,7 +78,7 @@ public class ProductController : ControllerBase
         {
             var product = await _productService.GetProductAsync(productId);
 
-            if (!(HttpContext.Request.Cookies["role"] == Role.anonimus.ToString()))
+            if (Request.Cookies.ContainsKey("token"))
             {
                 var userId = _jwtService.GetIdUser(HttpContext);
 
@@ -212,7 +212,7 @@ public class ProductController : ControllerBase
         try
         {
             await _productService.DeleteProductAsync(productId);
-            //TODO нужно еще будет удалять из истории покупок
+
             var userId =  _jwtService.GetIdUser(HttpContext);
             await _productViewHistoryService.DeleteHistoryAsync(userId,productId);
 

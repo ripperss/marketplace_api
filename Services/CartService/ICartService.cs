@@ -12,6 +12,7 @@ public interface ICartService
     Task DeleteCartProductAsync(int productId, int userId);
     Task<List<CartProduct>> GetProductCartPageAsync(int productId, int userId, int page);
     Task<bool> CreateCartAsync(int userId);
+    Task UpdateCartAsync(int userId, Cart newCart);
 
 
 }
