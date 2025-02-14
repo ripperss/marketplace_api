@@ -10,10 +10,12 @@ public class MailService
 {
     public async Task SendEmailAsync(string messages, string emailUser)
     {
+      
         string smtpServer = "smtp.gmail.com"; 
         int smtpPort = 587; 
         string senderEmail = "rippergods@gmail.com";
-        string senderPassword = "ewdwugdaakzybkil";
+        string senderPassword = "";
+         master
 
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("Отправитель", senderEmail));
