@@ -18,6 +18,7 @@ using marketplace_api.Services.CartService;
 using Hangfire.PostgreSql;
 using Hangfire;
 using marketplace_api;
+using marketplace_api.Services.CartManegementService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +69,7 @@ builder.Services.AddProd();
 builder.Services.AddScoped<ICartRepository,CartRepository>();   
 builder.Services.AddScoped<ICartService,CartService>();
 builder.Services.AddScoped<marketplace_api.Services.MailService>();
+builder.Services.AddScoped<ICartManagementService, CartManagementService>();
 
 var app = builder.Build();
 

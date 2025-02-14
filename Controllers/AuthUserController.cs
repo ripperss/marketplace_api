@@ -81,8 +81,11 @@ public class AuthUserController : ControllerBase
                 return BadRequest("Данные не прошли валидацию");
             }
 
+            var sessiontoken = HttpContext.Request.Cookies["sessionToken"];
             var user = _mapper.Map<User>(userDto);
-            var token = await _authenticationService.LoginAsync(user);
+            var token = await _authenticationService.LoginAsync(user, sessiontoken);
+
+
             HttpContext.Response.Cookies.Append("token", token);
 
             BackgroundJob.Enqueue(() => _mailService.SendEmailAsync("мистер окунь вы успешно залогинились",userDto.Email));

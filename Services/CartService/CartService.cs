@@ -10,7 +10,7 @@ public class CartService : ICartService
 {
     private readonly ICartRepository _cartRepository;
 
-    public CartService(ICartRepository cartRepository, IUserService  userService)
+    public CartService(ICartRepository cartRepository)
     {
         _cartRepository = cartRepository;
     }
@@ -59,7 +59,7 @@ public class CartService : ICartService
 
     public async Task<CartProduct> GetCartProductAsync(int productId, int userId)
     {
-        var cartProduct = await GetCartProductAsync(productId, userId);
+        var cartProduct = await _cartRepository.GetProductoFCartAsync(userId, productId);
 
         return cartProduct;
     }
@@ -71,8 +71,15 @@ public class CartService : ICartService
             throw new Exception("номер страницы должен быть больше 0");
         }
 
-        var cartProduct = await GetProductCartPageAsync(productId, userId, page);
+        var cartProduct = await _cartRepository.GetGageProductAsync(userId, page);
 
         return cartProduct;
+    }
+
+    public async Task UpdateCartAsync(int userId, Cart newCart)
+    {
+        var cart = await _cartRepository.GetCartAsync(userId);
+
+        await _cartRepository.UpdateAsync(newCart, userId);
     }
 }

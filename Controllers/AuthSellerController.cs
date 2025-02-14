@@ -50,7 +50,9 @@ public class AuthSellerController : ControllerBase
                 ?? throw new InvalidOperationException("Ошибка маппинга UserDto в User");
             user.Role = Role.Seller;
 
-            var token = await _authenticationService.LoginAsync(user);
+            var sessiontoken = HttpContext.Request.Cookies["sessionToken"];
+            var token = await _authenticationService.LoginAsync(user, sessiontoken);
+            
             HttpContext.Response.Cookies.Append("token", token);
             _logger.LogInformation("Успешная аутентификация продавца {UserId}", user.Id);
 
