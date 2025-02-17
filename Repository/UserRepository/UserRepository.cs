@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using marketplace_api.Services.AuthService;
+using marketplace_api.Services.CartService;
 
 namespace marketplace_api.Repository.UserRepository;
 
@@ -13,13 +14,13 @@ public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
     private readonly ILogger<AppDbContext> _logger;
-    private readonly JwtService _jwtService;
+
 
     public UserRepository(AppDbContext context,ILogger<AppDbContext> logger,JwtService jwtService)
     {
         _context = context;
         _logger = logger;
-        _jwtService = jwtService;
+        
     }
 
     public async Task<User> CreateUserAsync(User user)

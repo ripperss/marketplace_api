@@ -36,7 +36,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Route("create")]
+    [Route("creates")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateUserAsync(UserDto userDto)
     {

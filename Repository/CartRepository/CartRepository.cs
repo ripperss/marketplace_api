@@ -136,7 +136,9 @@ public class CartRepository : ICartRepository
 
     public async Task DeleteProductAsync(int userId, int productId)
     {
-        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId); if (cart == null)
+        var cart = await _context.Carts
+            .Include(ps => ps.CartProducts)
+            .FirstOrDefaultAsync(c => c.UserId == userId); if (cart == null)
         {
             throw new NotFoundExeption("данный пользователь не найден");
         }

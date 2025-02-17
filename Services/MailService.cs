@@ -1,4 +1,5 @@
-﻿using MailKit;
+
+using MailKit;
 using MailKit.Security;
 using MimeKit;
 using MailKit.Net.Smtp;
@@ -8,17 +9,18 @@ namespace marketplace_api.Services;
 
 public class MailService
 {
-    public async void SendEmailAsync(string messages, string emailUser)
+    public async Task SendEmailAsync(string messages, string emailUser)
     {
         string smtpServer = "smtp.gmail.com"; 
         int smtpPort = 587; 
         string senderEmail = "rippergods@gmail.com";
+      
         string senderPassword = "";
 
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("Отправитель", senderEmail));
         message.To.Add(new MailboxAddress("Получатель", emailUser));
-        message.Subject = "Вы зарегестрировались продовцом урааа";
+        message.Subject = "Оповещение";
 
         var bodyBuilder = new BodyBuilder();
         bodyBuilder.TextBody = messages;
@@ -36,8 +38,7 @@ public class MailService
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при отправке email: {ex.Message}");
-                throw;
+                throw new Exception("Ошибка при отправке оповещения");
             }
         }
 

@@ -78,7 +78,7 @@ public class ProductController : ControllerBase
         {
             var product = await _productService.GetProductAsync(productId);
 
-            if (!(HttpContext.Request.Cookies["role"] == Role.anonimus.ToString()))
+            if (Request.Cookies.ContainsKey("token"))
             {
                 var userId = _jwtService.GetIdUser(HttpContext);
 
@@ -146,7 +146,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("patch{productId}")]
+    [Route("patch/{productId}")]
     [Authorize(Roles ="Admin,Seller")]
     public async Task<IActionResult> PatchProductAsync(JsonPatchDocument<Product> productPatch, int productId)
     {
@@ -205,14 +205,14 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("del/{productId:int}")]
+    [Route("delete/{productId:int}")]
     [Authorize(Roles = "Admin,Seller")]
     public async Task<IActionResult> DeleteProductAsync(int productId)
     {
         try
         {
             await _productService.DeleteProductAsync(productId);
-            //TODO нужно еще будет удалять из истории покупок
+
             var userId =  _jwtService.GetIdUser(HttpContext);
             await _productViewHistoryService.DeleteHistoryAsync(userId,productId);
 

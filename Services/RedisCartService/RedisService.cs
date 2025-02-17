@@ -1,4 +1,6 @@
 ﻿using marketplace_api.Models;
+using marketplace_api.Repository.ProductRepository;
+using marketplace_api.Services.ProductService;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 
@@ -7,42 +9,27 @@ namespace marketplace_api.Services.RedisService;
 public class RedisService : IRedisService
 {
     private readonly IDistributedCache _redisCache;
+    private readonly IProductService _productService;
 
-    public RedisService(IDistributedCache redisCache)
+    public RedisService(IDistributedCache redisCache, IProductService productService)
     {
         _redisCache = redisCache;
+        _productService = productService;
     }
 
-    public async Task AddProductToCartAsync(string sessionToken, Role role, int productId, int quantity = 1)
+    private async Task<List<CartProduct>> GetCartProductsListAsync(string sessionToken)
     {
-        if (string.IsNullOrEmpty(sessionToken))
-        {
-            throw new ArgumentNullException(nameof(sessionToken));
-        }
-
-        if (productId <= 0 || quantity <= 0)
-        {
-            throw new ArgumentException("ProductId and quantity must be greater than zero.");
-        }
-
         var key = $"cart:{sessionToken}";
+        var existingData = await _redisCache.GetStringAsync(key);
 
-        var cart = await GetCartProductsAsync(sessionToken);
+        return string.IsNullOrEmpty(existingData) ? new List<CartProduct>()
+            : JsonSerializer.Deserialize<List<CartProduct>>(existingData)
+            ?? new List<CartProduct>();
+    }
 
-        var existingCartProduct = cart.CartProducts.FirstOrDefault(cp => cp.ProductId == productId);
-        if (existingCartProduct != null)
-        {
-            existingCartProduct.Quantity += quantity;
-        }
-        else
-        {
-            cart.CartProducts.Add(new CartProduct
-            {
-                CartId = cart.Id,
-                ProductId = productId,
-                Quantity = quantity
-            });
-        }
+    private async Task SaveCartProductsListAsync(string sessionToken, Role role, List<CartProduct> cartProducts)
+    {
+        var key = $"cart:{sessionToken}";
 
         TimeSpan expiration = role switch
         {
@@ -56,125 +43,113 @@ public class RedisService : IRedisService
             AbsoluteExpirationRelativeToNow = expiration
         };
 
-        await _redisCache.SetStringAsync(key, JsonSerializer.Serialize(cart), options);
+        await _redisCache.SetStringAsync(key, JsonSerializer.Serialize(cartProducts), options);
     }
 
-    public async Task<Cart> GetCartProductsAsync(string sessionToken)
+    public async Task AddProductToCartAsync(string sessionToken, Role role, int productId, int quantity = 1)
     {
-        if (string.IsNullOrEmpty(sessionToken))
+        if (string.IsNullOrEmpty(sessionToken)) throw new ArgumentNullException(nameof(sessionToken));
+        if (productId <= 0 || quantity <= 0) throw new ArgumentException("ProductId и Quantity должны быть больше нуля.");
+
+        var cartProducts = await GetCartProductsListAsync(sessionToken);
+        var existingProduct = cartProducts.FirstOrDefault(cp => cp.ProductId == productId);
+
+        if (existingProduct != null)
         {
-            throw new ArgumentNullException(nameof(sessionToken));
+            existingProduct.Quantity += quantity;
+        }
+        else
+        {
+            cartProducts.Add(new CartProduct { ProductId = productId, Quantity = quantity });
         }
 
-        var key = $"cart:{sessionToken}";
-
-        var existingCart = await _redisCache.GetStringAsync(key);
-
-        if (string.IsNullOrEmpty(existingCart))
-        {
-            return new Cart { CartProducts = new List<CartProduct>() };
-        }
-
-        var cart = JsonSerializer.Deserialize<Cart>(existingCart);
-
-        return cart ?? new Cart { CartProducts = new List<CartProduct>() };
+        await SaveCartProductsListAsync(sessionToken, role, cartProducts);
     }
 
     public async Task<CartProduct> GetProductFromCartAsync(string sessionToken, int productId)
     {
-        if (string.IsNullOrEmpty(sessionToken))
+        if (string.IsNullOrEmpty(sessionToken)) throw new ArgumentNullException(nameof(sessionToken));
+
+        var cartProducts = await GetCartProductsListAsync(sessionToken);
+        var product = cartProducts.FirstOrDefault(cp => cp.ProductId == productId);
+
+        if (product == null) throw new KeyNotFoundException($"Товар с ID {productId} не найден в корзине.");
+
+        if( product.Product == null)
         {
-            throw new ArgumentNullException(nameof(sessionToken));
+            product.Product = await _productService.GetProductAsync(product.ProductId);
         }
 
-        if (productId <= 0)
-        {
-            throw new ArgumentException("ProductId must be greater than zero.");
-        }
-
-        var cart = await GetCartProductsAsync(sessionToken);
-
-        var cartProduct = cart.CartProducts.FirstOrDefault(cp => cp.ProductId == productId);
-
-        if (cartProduct == null)
-        {
-            throw new KeyNotFoundException($"Product with ID {productId} not found in cart.");
-        }
-
-        return cartProduct;
+        return product;
     }
 
     public async Task RemoveProductFromCartAsync(string sessionToken, int productId)
     {
-        if (string.IsNullOrEmpty(sessionToken))
-        {
-            throw new ArgumentNullException(nameof(sessionToken));
-        }
+        if (string.IsNullOrEmpty(sessionToken)) throw new ArgumentNullException(nameof(sessionToken));
 
-        if (productId <= 0)
-        {
-            throw new ArgumentException("ProductId must be greater than zero.");
-        }
+        var cartProducts = await GetCartProductsListAsync(sessionToken);
+        var product = cartProducts.FirstOrDefault(cp => cp.ProductId == productId);
 
-        var key = $"cart:{sessionToken}";
+        if (product == null) throw new KeyNotFoundException($"Товар с ID {productId} не найден в корзине.");
 
-        var cart = await GetCartProductsAsync(sessionToken);
-
-        var cartProduct = cart.CartProducts.FirstOrDefault(cp => cp.ProductId == productId);
-        if (cartProduct == null)
-        {
-            throw new KeyNotFoundException($"Product with ID {productId} not found in cart.");
-        }
-
-        cart.CartProducts.Remove(cartProduct);
-
-        await _redisCache.SetStringAsync(key, JsonSerializer.Serialize(cart));
+        cartProducts.Remove(product);
+        await SaveCartProductsListAsync(sessionToken, Role.User, cartProducts);
     }
 
     public async Task<List<CartProduct>> GetPaginatedCartProductsAsync(string sessionToken, int pageNumber, int pageSize)
     {
-        if (string.IsNullOrEmpty(sessionToken))
-        {
+        if (string.IsNullOrEmpty(sessionToken)) 
             throw new ArgumentNullException(nameof(sessionToken));
-        }
 
-        if (pageNumber <= 0 || pageSize <= 0)
-        {
-            throw new ArgumentException("Page number and page size must be greater than zero.");
-        }
+        if (pageNumber <= 0 || pageSize <= 0) 
+            throw new ArgumentException("PageNumber и PageSize должны быть больше нуля.");
 
-        var cart = await GetCartProductsAsync(sessionToken);
+        var cartProducts = await GetCartProductsListAsync(sessionToken);
 
-        var paginatedCartProducts = cart.CartProducts
+        var cartProductsWithDetails = await LoadProductDetails(cartProducts);
+
+        return cartProductsWithDetails
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
 
-        return paginatedCartProducts;
     }
 
     public async Task DeleteAllCartAsync(string sessionToken)
     {
-        if (string.IsNullOrEmpty(sessionToken))
-        {
-            throw new ArgumentNullException(nameof(sessionToken));
-        }
+        if (string.IsNullOrEmpty(sessionToken)) throw new ArgumentNullException(nameof(sessionToken));
 
         var key = $"cart:{sessionToken}";
         await _redisCache.RemoveAsync(key);
     }
 
-    public async Task<List<CartProduct>> GetAllCartProduct(string sessionToken)
+    public async Task<List<CartProduct>> GetAllCartProductsAsync(string sessionToken)
     {
-        if (string.IsNullOrEmpty(sessionToken))
+        if (string.IsNullOrEmpty(sessionToken)) throw new ArgumentNullException(nameof(sessionToken));
+
+        var cartProducts = await GetCartProductsListAsync(sessionToken);
+
+        var cartProductsWithDetails = await LoadProductDetails(cartProducts);
+
+        return cartProductsWithDetails;
+    }
+
+    private async Task<List<CartProduct>> LoadProductDetails(List<CartProduct> cartProducts)
+    {
+        var cartProductsWithDetails = new List<CartProduct>();
+        foreach (var cartProduct in cartProducts)
         {
-            throw new ArgumentNullException(nameof(sessionToken));
+            try
+            {
+                var product = await _productService.GetProductAsync(cartProduct.ProductId);
+                cartProduct.Product = product; 
+                cartProductsWithDetails.Add(cartProduct);
+            }
+            catch (Exception ex)
+            {
+                throw new DllNotFoundException("продукт не найден");
+            }
         }
-
-        var cart = await GetCartProductsAsync(sessionToken);
-
-        var cartProducts = cart.CartProducts.ToList();
-
-        return cartProducts;
+        return cartProductsWithDetails;
     }
 }
