@@ -75,6 +75,11 @@ public class RedisService : IRedisService
 
         if (product == null) throw new KeyNotFoundException($"Товар с ID {productId} не найден в корзине.");
 
+        if( product.Product == null)
+        {
+            product.Product = await _productService.GetProductAsync(product.ProductId);
+        }
+
         return product;
     }
 

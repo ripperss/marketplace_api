@@ -146,7 +146,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("patch{productId}")]
+    [Route("patch/{productId}")]
     [Authorize(Roles ="Admin,Seller")]
     public async Task<IActionResult> PatchProductAsync(JsonPatchDocument<Product> productPatch, int productId)
     {
@@ -205,7 +205,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("del/{productId:int}")]
+    [Route("delete/{productId:int}")]
     [Authorize(Roles = "Admin,Seller")]
     public async Task<IActionResult> DeleteProductAsync(int productId)
     {

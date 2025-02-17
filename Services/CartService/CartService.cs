@@ -64,7 +64,7 @@ public class CartService : ICartService
         return cartProduct;
     }
 
-    public async Task<List<CartProduct>> GetProductCartPageAsync(int productId, int userId, int page)
+    public async Task<List<CartProduct>> GetProductCartPageAsync(int userId, int page)
     {
         if (page <= 0)
         {

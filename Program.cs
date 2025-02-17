@@ -19,6 +19,7 @@ using Hangfire.PostgreSql;
 using Hangfire;
 using marketplace_api;
 using marketplace_api.Services.CartManegementService;
+using marketplace_api.Repository.Rewiew;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ builder.Services.AddControllers(options =>
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
 
 
-builder.Services.AddAutoMapper(typeof(UserProfiles),typeof(ProductProfiles));
+builder.Services.AddAutoMapper(typeof(UserProfiles),typeof(ProductProfiles), typeof(CartProductProfiles));
 
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -70,6 +71,9 @@ builder.Services.AddScoped<ICartRepository,CartRepository>();
 builder.Services.AddScoped<ICartService,CartService>();
 builder.Services.AddScoped<marketplace_api.Services.MailService>();
 builder.Services.AddScoped<ICartManagementService, CartManagementService>();
+builder.Services.AddScoped<IReviewRepository,ReviewRepository>();
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -79,6 +83,13 @@ app.UseAuthorization();
 app.UseHangfireDashboard("/dash", new DashboardOptions
 {
     Authorization = new[] { new AllowAllUsersAuthorizationFilter() }
+});
+
+app.UseSwagger();
+app.UseSwaggerUI(config =>
+{
+    config.RoutePrefix = string.Empty;
+    config.SwaggerEndpoint("swagger/v1/swagger.json", "market API"); 
 });
 
 app.MapControllerRoute(

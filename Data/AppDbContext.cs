@@ -25,7 +25,7 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
+       // modelBuilder.Entity<Product>().HasMany(r => r.Reviews).WithOne(p => p.Product).OnDelete();
         // Связь Review ↔ Product и User
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Product)

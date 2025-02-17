@@ -34,7 +34,7 @@ public class AuthSellerController : ControllerBase
         _mail = mail;
     }
 
-    [Route("log")]
+    [Route("login")]
     [HttpPost]
     public async Task<IActionResult> Login(UserDto userDto)
     {

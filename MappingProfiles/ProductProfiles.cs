@@ -10,6 +10,8 @@ public class ProductProfiles : Profile
     {
         CreateMap<ProductDto, Product>();
 
-        CreateMap<Product, ProductDto>();
+        CreateMap<Product, ProductDto>()
+            .ForMember(dto => dto.Id,
+            opt => opt.MapFrom(product => product.Id)); 
     }
 }

@@ -6,8 +6,10 @@ namespace marketplace_api.Services.CartManegementService;
 public interface ICartManagementService
 {
     Task CreateOrUpdateCart(int userId, string sessiontoken);
-    Task GetProductCartAsync();
-    Task UpdateCartAsync();
-    Task DeleteProductCartAsync();
-    Task AddProductOfCart(int userId, string sessiontoken, int productId, Role role);
+    Task<CartProduct> GetProductCartAsync(HttpContext context, int productId);
+    Task UpdateCartAsync(HttpContext context, Cart newCart);
+    Task DeleteProductCartAsync(HttpContext context, int productId);
+    Task AddProductOfCart(int productId, HttpContext context);
+    Task<List<CartProduct>> GetPageProdcutOfCart(HttpContext context, int page);
+    Task<List<CartProduct>> GetAllProductOfCartAsync(HttpContext context);
 }
