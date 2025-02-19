@@ -20,6 +20,7 @@ using Hangfire;
 using marketplace_api;
 using marketplace_api.Services.CartManegementService;
 using marketplace_api.Repository.Rewiew;
+using marketplace_api.Services.ReviewService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,11 @@ builder.Services.AddControllers(options =>
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
 
 
-builder.Services.AddAutoMapper(typeof(UserProfiles),typeof(ProductProfiles), typeof(CartProductProfiles));
+builder.Services.AddAutoMapper(
+    typeof(UserProfiles)
+    , typeof(ProductProfiles)
+    , typeof(CartProductProfiles)
+    , typeof(ReviewProfiles));
 
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -72,6 +77,7 @@ builder.Services.AddScoped<ICartService,CartService>();
 builder.Services.AddScoped<marketplace_api.Services.MailService>();
 builder.Services.AddScoped<ICartManagementService, CartManagementService>();
 builder.Services.AddScoped<IReviewRepository,ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddSwaggerGen();
 
@@ -95,8 +101,6 @@ app.UseSwaggerUI(config =>
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapGet("/", () => "Hello World!");
 
 app.Run();
 
