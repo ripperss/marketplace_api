@@ -14,7 +14,6 @@ public class MailService
         string smtpServer = "smtp.gmail.com"; 
         int smtpPort = 587; 
         string senderEmail = "rippergods@gmail.com";
-      
         string senderPassword = "";
 
         var message = new MimeMessage();

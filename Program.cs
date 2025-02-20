@@ -20,6 +20,8 @@ using Hangfire;
 using marketplace_api;
 using marketplace_api.Services.CartManegementService;
 using marketplace_api.Repository.Rewiew;
+using marketplace_api.Services.ReviewService;
+using Org.BouncyCastle.Asn1.Cms.Ecc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +33,11 @@ builder.Services.AddControllers(options =>
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
 
 
-builder.Services.AddAutoMapper(typeof(UserProfiles),typeof(ProductProfiles), typeof(CartProductProfiles));
+builder.Services.AddAutoMapper(
+    typeof(UserProfiles)
+    , typeof(ProductProfiles)
+    , typeof(CartProductProfiles)
+    , typeof(ReviewProfiles));
 
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -62,8 +68,12 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddScoped<IProductViewHistoryService,ProductViewHistoryService>();
+
 builder.Services.AddScoped<IValidator<UserDto>,UserDtoValidator>();
 builder.Services.AddScoped<IValidator<ProductDto>,ProductDtoValidator>();
+builder.Services.AddScoped<IValidator<ReviewRequestDto>,ReviewRequestDtoValidator>();
+builder.Services.AddScoped<IValidator<ReviewResponseDto>,ReviewResponseDtoValidator>();
+
 builder.Services.AddScoped<IRedisService, RedisService>();
 builder.Services.AddScoped<IProductViewHistoryRepository,ProductViewHistoryRepository>();
 builder.Services.AddProd();
@@ -72,6 +82,10 @@ builder.Services.AddScoped<ICartService,CartService>();
 builder.Services.AddScoped<marketplace_api.Services.MailService>();
 builder.Services.AddScoped<ICartManagementService, CartManagementService>();
 builder.Services.AddScoped<IReviewRepository,ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+
+builder.Services.AddScoped<CustomRequestValidateReviewFilter>();
+builder.Services.AddScoped<CustomResponseValidateReviewFilter>();
 
 builder.Services.AddSwaggerGen();
 
@@ -95,8 +109,6 @@ app.UseSwaggerUI(config =>
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapGet("/", () => "Hello World!");
 
 app.Run();
 
