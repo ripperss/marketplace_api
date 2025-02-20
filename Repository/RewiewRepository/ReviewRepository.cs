@@ -29,6 +29,7 @@ public class ReviewRepository : IReviewRepository
             throw new NotFoundExeption("Данный отзыв не найден");
         }
 
+        _appDbContext.Remove(review); 
         await _appDbContext.SaveChangesAsync();
     }
 
