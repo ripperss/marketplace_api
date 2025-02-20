@@ -25,23 +25,14 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-       // modelBuilder.Entity<Product>().HasMany(r => r.Reviews).WithOne(p => p.Product).OnDelete();
-        // Связь Review ↔ Product и User
-        modelBuilder.Entity<Review>()
-            .HasOne(r => r.Product)
-            .WithMany(p => p.Reviews)
-            .HasForeignKey(r => r.ProductId);
-
         modelBuilder.Entity<Review>()
             .HasOne(r => r.User)
             .WithMany(u => u.Reviews)
             .HasForeignKey(r => r.UserId);
 
-        // Связь OrderProduct (Многие-ко-многим)
         modelBuilder.Entity<OrderProduct>()
             .HasKey(op => new { op.OrderId, op.ProductId });
 
-        // Связь CartProduct (Многие-ко-многим)
         modelBuilder.Entity<CartProduct>()
             .HasKey(cp => new { cp.CartId, cp.ProductId });
 
