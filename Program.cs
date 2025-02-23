@@ -22,6 +22,8 @@ using marketplace_api.Services.CartManegementService;
 using marketplace_api.Repository.Rewiew;
 using marketplace_api.Services.ReviewService;
 using Org.BouncyCastle.Asn1.Cms.Ecc;
+using marketplace_api.Repository.OrderRepository;
+using marketplace_api.Services.OrderService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,6 +88,9 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddScoped<CustomRequestValidateReviewFilter>();
 builder.Services.AddScoped<CustomResponseValidateReviewFilter>();
+
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 builder.Services.AddSwaggerGen();
 
