@@ -17,6 +17,20 @@ import '@/assets/css/main.css'
     <CardItem/>
     <CardItem/>
     <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
+    <CardItem/>
 </div>
 
 </template>
