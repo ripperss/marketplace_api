@@ -16,7 +16,8 @@
 	max-height: auto;
 	padding: 20px 50px;
 	@media (max-width: 767px) {
-		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		grid-template-columns: repeat(2,calc(50% - 4px));
+        grid-auto-flow: dense;
 		padding: 10px 25px;
 	}
 

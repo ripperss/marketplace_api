@@ -26,11 +26,19 @@ header {
 .logo {
 	color: white;
 	font-size: 3rem;
+    @media (max-width: 1023px) {
+        display: none;
+        
+    }
 }
 
 .nav--search {
 	display: flex;
 	align-items: center;
+    @media (max-width: 1023px) {
+        width: 100%;
+        
+    }
 }
 
 .nav--search__place {
@@ -39,4 +47,10 @@ header {
 	height: 3rem;
 	font-size: 2rem;
 	padding: 20px;
+    background-color: white;
+    @media (max-width: 1023px) {
+        width: 100%;
+        font-size: 1rem;
+        
+    }
 }

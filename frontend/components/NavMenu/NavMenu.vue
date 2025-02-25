@@ -11,7 +11,7 @@ import "@/assets/css/navbar.css";
                     <p class="logo">WildBobr</p>
                 </div>
                 <div class="nav--search">
-                    <Input type="search" placeholder="Поиск Курва" class="nav--search__place" />
+                    <Input type="search" placeholder="Поиск  Kurwa" class="nav--search__place" />
                 </div>
                 <div class="nav--button">
                 </div>
