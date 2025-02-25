@@ -7,30 +7,30 @@ import '@/assets/css/main.css'
 
 <template>
 
-<NavMenu></NavMenu>
+    <NavMenu></NavMenu>
 
-<div class="card">
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-    <CardItem/>
-</div>
+    <div class="card">
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+        <CardItem />
+    </div>
 
 </template>
