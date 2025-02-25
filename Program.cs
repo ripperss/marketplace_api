@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using marketplace_api.Extenions;
 using FluentValidation;
-using marketplace_api.ModelsDto;
 using marketplace_api.CustomFilter;
 using marketplace_api.Services.RedisService;
 using marketplace_api.MappingProfiles;
@@ -24,6 +23,7 @@ using marketplace_api.Services.ReviewService;
 using Org.BouncyCastle.Asn1.Cms.Ecc;
 using marketplace_api.Repository.OrderRepository;
 using marketplace_api.Services.OrderService;
+using marketplace_api.ModelsDto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +39,9 @@ builder.Services.AddAutoMapper(
     typeof(UserProfiles)
     , typeof(ProductProfiles)
     , typeof(CartProductProfiles)
-    , typeof(ReviewProfiles));
+    , typeof(ReviewProfiles)
+    , typeof(OrderProfile)
+    , typeof(OrderProductProfile));
 
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -53,7 +55,7 @@ var connestString = builder.Configuration.GetConnectionString("DataBase");
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = "redis";
+    options.Configuration = "my-redis-container";
     options.InstanceName = "docker_network";
 });
 

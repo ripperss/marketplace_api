@@ -1,9 +1,9 @@
-﻿using marketplace_api.ModelsDto;
-using marketplace_api.Services.ReviewService;
+﻿using marketplace_api.Services.ReviewService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using marketplace_api.CustomFilter;
 using marketplace_api.Models;
+using marketplace_api.ModelsDto;
 
 namespace marketplace_api.Controllers;
 
@@ -11,14 +11,14 @@ namespace marketplace_api.Controllers;
 [ServiceFilter(typeof(CustomRequestValidateReviewFilter))]
 [ApiController]
 [Route("{controller}")]
-public class ReviewContoller : ControllerBase
+public class ReviewController : ControllerBase
 {
     private readonly IReviewService _reviewService;
-    private readonly ILogger<ReviewContoller> _logger;
+    private readonly ILogger<ReviewController> _logger;
     
-    public ReviewContoller(
+    public ReviewController(
         IReviewService reviewService
-        , ILogger<ReviewContoller> logger)
+        , ILogger<ReviewController> logger)
     {
         _reviewService = reviewService; 
         _logger = logger;

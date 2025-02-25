@@ -8,8 +8,8 @@ public class User
     public string HashPassword { get; set; }
     public DateTime DateRegistered { get; set; } = DateTime.UtcNow;
     public Role Role { get; set; } = Role.User;
-   
-    public Order Order { get; set; } = new Order();
+
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
     public ICollection<ProductPurchaseHistory> ProductPurchaseHistorys { get; set; } = new List<ProductPurchaseHistory>();
     public ICollection<ProductViewHistory> Products { get; set; } = new List<ProductViewHistory>();
