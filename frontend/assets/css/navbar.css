@@ -1,0 +1,42 @@
+@import '@/assets/css/main.css';
+
+header {
+    position:sticky; /* fixing the position takes it out of html flow - knows
+                     nothing about where to locate itself except by browser
+                     coordinates */
+    left:0;           /* top left corner should start at leftmost spot */
+    top:0;            /* top left corner should start at topmost spot */
+    width:100vw;      /* take up the full browser width */
+    z-index:200;  /* high z index so other content scrolls underneath */
+    height:auto; 
+}
+.nav--container {
+	display: grid;
+	grid-template-columns: auto;
+	position: sticky;
+	align-items: center;
+	grid-template-columns: max-content auto max-content;
+	grid-template-rows: auto;
+	gap: 30px;
+	background-color: var(--caret-color);
+	padding: 10px 20px;
+	z-index: 100;
+}
+
+.logo {
+	color: white;
+	font-size: 3rem;
+}
+
+.nav--search {
+	display: flex;
+	align-items: center;
+}
+
+.nav--search__place {
+	border-radius: 5px;
+	width: 70%;
+	height: 3rem;
+	font-size: 2rem;
+	padding: 20px;
+}

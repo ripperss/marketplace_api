@@ -1,30 +1,37 @@
-.bg-primary{
-    background-color: rgb(198, 6, 198);
-    color: white;
+:root {
+	--caret-color: rgb(198, 6, 198);
 }
 
-
-.card{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    max-height: auto;
-    padding: 20px 50px;
+.bg-primary {
+	background-color: var(--caret-color);
+	color: white;
 }
 
-.card-items{
-    display: grid;
-    grid-template-columns: auto;
-    filter: drop-shadow(7px 5px 15px #0000001c);
-    background-color: #ffffff;
-    gap: 10px;
-    padding: 10px 10px;
-    border-radius: 10px;
+.card {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	justify-content: center;
+	align-items: center;
+	gap: 30px;
+	max-height: auto;
+	padding: 20px 50px;
+	@media (max-width: 767px) {
+		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		padding: 10px 25px;
+	}
 
 }
 
-.hover\:bg-primary\/90:hover{
-    background-color: rgb(210, 74, 210);
+.card-items {
+	display: grid;
+	grid-template-columns: auto;
+	filter: drop-shadow(7px 5px 15px #0000001c);
+	background-color: #ffffff;
+	gap: 10px;
+	padding: 10px 10px;
+	border-radius: 10px;
+}
+
+.hover\:bg-primary\/90:hover {
+	background-color: rgb(210, 74, 210);
 }
