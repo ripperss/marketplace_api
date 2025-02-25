@@ -11,9 +11,34 @@ import "@/assets/css/navbar.css";
                     <p class="logo">WildBobr</p>
                 </div>
                 <div class="nav--search">
-                    <Input type="search" placeholder="Поиск  Kurwa" class="nav--search__place" />
+                    <Input type="search" placeholder="Найти на WildBobr" class="nav--search__place" />
                 </div>
-                <div class="nav--button">
+                <div class="nav--pc_items">
+                    <a href="#" class="nav--pc_link">
+                        <span class="nav--pc_icon nav--pc_icon__delivery">
+
+                        </span>
+                        Доставки
+                    </a>
+                    <a href="#" class="nav--pc_link">
+                        <span class="nav--pc_icon nav--pc_icon__favorite">
+
+                        </span>
+                        Избранное
+                    </a>
+                    <a href="#" class="nav--pc_link">
+                        <span class="nav--pc_icon nav--pc_icon__profile">
+
+                        </span>
+                        Профиль
+                    </a>
+                    <a href="#" class="nav--pc_link">
+                        <span class="nav--pc_icon nav--pc_icon__cart">
+
+                        </span>
+                        Корзина
+                    </a>
+
                 </div>
             </div>
         </nav>
