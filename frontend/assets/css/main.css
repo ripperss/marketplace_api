@@ -1,5 +1,6 @@
 :root {
 	--caret-color: rgb(198, 6, 198);
+    --caret-hover: rgb(210, 74, 210);
 }
 
 .bg-primary {
@@ -33,5 +34,5 @@
 }
 
 .hover\:bg-primary\/90:hover {
-	background-color: rgb(210, 74, 210);
+	background-color: var(--caret-hover);
 }
