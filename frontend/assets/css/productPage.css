@@ -1,0 +1,133 @@
+@import '@/assets/css/main.css';
+
+/* Общие стили для страницы товара */
+
+.product-page {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+	padding: 40px;
+	background-color: #f7f7f7;
+}
+
+/* Стили для изображения товара */
+.product-image {
+	width: 100%;
+	max-width: 500px;
+	object-fit: contain;
+	margin-bottom: 20px;
+}
+
+/* Стили для блока с информацией о товаре */
+.product-info {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Название товара */
+.product-info h1 {
+	font-size: 32px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 10px;
+}
+
+/* Цена товара */
+.product-info .price {
+	font-size: 24px;
+	font-weight: bold;
+
+	margin-bottom: 20px;
+}
+
+/* Описание товара */
+.product-info .description {
+	font-size: 16px;
+	color: #555;
+	margin-bottom: 20px;
+}
+
+/* Характеристики товара */
+.product-info .characteristics {
+	font-size: 14px;
+	color: #777;
+	margin-bottom: 20px;
+}
+
+/* Кнопки */
+.product-info .buy-buttons {
+	display: flex;
+	gap: 15px;
+	margin-top: 20px;
+}
+
+.product-info .buy-buttons button {
+	padding: 15px 20px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	border-radius: 5px;
+	border: none;
+	transition: background-color 0.3s ease;
+}
+
+.product-info .buy-buttons .add-to-cart {
+	background-color: var(--caret-color);
+	color: white;
+}
+
+.product-info .buy-buttons .add-to-cart:hover {
+	background-color: var(--caret-hover);
+}
+
+.product-info .buy-buttons .go-to-cart {
+	background-color: #f1f1f1;
+	color: #333;
+}
+
+.product-info .buy-buttons .go-to-cart:hover {
+	background-color: #e1e1e1;
+}
+
+
+.not-found{
+	display: grid;
+	width: 100%;
+	height: auto;
+	gap: 30px;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 15% 0;
+	
+}
+
+.not-found__text{
+	font-size: 3rem;
+}
+
+
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+	.product-page {
+		grid-template-columns: 1fr;
+		padding: 20px;
+	}
+
+	.product-info h1 {
+		font-size: 26px;
+	}
+
+	.product-info .price {
+		font-size: 22px;
+	}
+
+	.product-info .description {
+		font-size: 14px;
+	}
+
+	.product-info .characteristics {
+		font-size: 12px;
+	}
+}

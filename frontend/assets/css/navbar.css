@@ -26,7 +26,7 @@ header {
 	grid-template-rows: auto;
 	gap: 30px;
 	background-color: var(--caret-color);
-	padding: 10px 20px;
+	padding: 10px 60px;
 	z-index: 100;
 }
 
@@ -259,3 +259,6 @@ header {
 	top: 0;
 	left: 0;
 }
+
+
+
