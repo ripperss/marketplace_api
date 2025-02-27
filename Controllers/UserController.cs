@@ -65,7 +65,7 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("users")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin, User,Seller")]
     public async Task<IActionResult> GetAllUsersAsync()
     {
         _logger.LogInformation("Получение всех пользователей.");
@@ -73,7 +73,7 @@ public class UserController : ControllerBase
         try
         {
             var users = await _userService.GetAllUsersAsync();
-            var userDtos = _mapper.Map<List<UserDto>>(users);
+            var userDtos = _mapper.Map<List<UserResponseDto>>(users);
             _logger.LogInformation("Успешно получены все пользователи.");
             return Ok(userDtos);
         }
@@ -86,7 +86,7 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("user")]
-    [Authorize(Roles ="User,Admin")]
+    [Authorize(Roles ="User,Admin,Seller")]
     public async Task<IActionResult> GetUserAsync()
     {
         try
@@ -95,7 +95,7 @@ public class UserController : ControllerBase
             _logger.LogInformation("Получение пользователя с ID: {UserId}", userId);
             User user = await _userService.GetByIndexUserAsync(userId);
 
-            var userDto = _mapper.Map<UserDto>(user);
+            var userDto = _mapper.Map<UserResponseDto>(user);
             _logger.LogInformation("Успешно получен пользователь с ID: {UserId}", userId);
             return Ok(userDto);
         }
@@ -116,7 +116,7 @@ public class UserController : ControllerBase
         {
             var user = await _userService.GetByIndexUserAsync(id);
 
-            var userDto = _mapper.Map<UserDto>(user);
+            var userDto = _mapper.Map<UserResponseDto>(user);
             _logger.LogInformation("Успешно получен пользователь с ID: {UserId}", id);
             return Ok(userDto);
         }

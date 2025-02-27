@@ -4,7 +4,7 @@ namespace marketplace_api.Repository.OrderRepository;
 
 public interface IOrderRepository
 {
-    Task<Order> GetOrderAsync(int orderId, int userId);
+    Task<Order> GetOrderAsync(int orderId);
     Task<List<Order>> GetOrdersAsync(int userid);
     Task CreateOrderAsync(Order order); 
     Task DeleteOrderAsync(int orderId);
