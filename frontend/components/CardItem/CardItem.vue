@@ -13,7 +13,7 @@ const product = {
 <template>
 
   <div class="card-items">
-    <img src="@/assets/img/card.jpeg" :alt="product.name " class="card-img">
+    <img src="@/assets/img/card.jpeg" :alt="product.name" class="card-img">
     <p class="card-coast"> {{ product.price.toLocaleString() }} ₽</p>
     <p class="card--descripion">
       {{ product.name }}
