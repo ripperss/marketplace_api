@@ -14,5 +14,7 @@ public class UserProfiles : Profile
     .ForMember(user => user.HashPassword, opt => opt.MapFrom(dto => dto.HashPassword));
 
         CreateMap<User, UserDto>();
+
+        CreateMap<User,UserResponseDto>();
     }
 }

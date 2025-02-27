@@ -29,7 +29,8 @@ public class AppDbContext : DbContext
             .HasOne(r => r.User)
             .WithMany(u => u.Reviews)
             .HasForeignKey(r => r.UserId);
-
+        modelBuilder.Entity<Product>();
+        modelBuilder.Entity<User>();
         modelBuilder.Entity<OrderProduct>()
             .HasKey(op => new { op.OrderId, op.ProductId });
 
