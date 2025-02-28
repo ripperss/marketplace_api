@@ -123,8 +123,9 @@ public class OrderService : IOrderService
         return _mapper.Map<List<OrderDto>>(orders.ToList());
     }
 
-    public async Task UpdateOrderAsync(Order newOrder, int orderId)
+    public async Task UpdateOrderAsync(OrderDto newOrder, int orderId)
     {
-        await _orderRepository.UpdateOrderAsync(newOrder, orderId);
+        var order = _mapper.Map<Order>(newOrder);
+        await _orderRepository.UpdateOrderAsync(order, orderId);
     }
 }
