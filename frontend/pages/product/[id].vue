@@ -115,8 +115,8 @@ const thumbsSwiper = ref(null);
 
   <div v-else class="not-found">
     <p class="not-found__text">Товар не найден</p>
-    <nuxt-link to="/">
-      <Button>Вернуться на главную</Button>
+    <nuxt-link>
+      <Button @click="goBack">Вернуться назад</Button>
     </nuxt-link>
   </div>
 </template>
