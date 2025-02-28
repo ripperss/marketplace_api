@@ -24,6 +24,7 @@ using Org.BouncyCastle.Asn1.Cms.Ecc;
 using marketplace_api.Repository.OrderRepository;
 using marketplace_api.Services.OrderService;
 using marketplace_api.ModelsDto;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,12 @@ builder.Services.AddControllers(options =>
 });
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
 
+
+builder.Services.AddCors(options => options
+    .AddPolicy("CorsPolicy", builder => 
+    {
+    builder.WithOrigins("http://localhost:3000");
+    }));
 
 builder.Services.AddAutoMapper(
     typeof(UserProfiles)
@@ -113,10 +120,17 @@ app.UseSwaggerUI(config =>
     config.SwaggerEndpoint("swagger/v1/swagger.json", "market API"); 
 });
 
+app.UseCors("CorsPolicy");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapGet("dd",(AppDbContext context) =>
+{
+    context.Database.EnsureCreated();
+    return Results.Ok(context.Users);
+});
 app.Run();
 
 

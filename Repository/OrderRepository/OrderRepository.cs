@@ -33,12 +33,12 @@ public class OrderRepository : IOrderRepository
         
     }
 
-    public async Task<Order> GetOrderAsync(int orderId, int userId)
+    public async Task<Order> GetOrderAsync(int orderId)
     {
         var order = await _context.Orders
             .Include(order => order.Products)
             .FirstOrDefaultAsync(ord => ord.Id == orderId);
-        if( order == null || order.UserId != orderId )
+        if( order == null )
         {
             throw new NotFoundExeption("данный заказ не найден");
         }
