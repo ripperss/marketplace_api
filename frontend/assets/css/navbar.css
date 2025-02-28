@@ -28,6 +28,9 @@ header {
 	background-color: var(--caret-color);
 	padding: 10px 60px;
 	z-index: 100;
+	@media (max-width: 1023px) {
+		padding: 10px 10px;
+	}
 }
 
 .logo {
