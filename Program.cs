@@ -25,6 +25,7 @@ using marketplace_api.Repository.OrderRepository;
 using marketplace_api.Services.OrderService;
 using marketplace_api.ModelsDto;
 using Microsoft.AspNetCore.Http.HttpResults;
+using marketplace_api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
