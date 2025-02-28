@@ -1,16 +1,16 @@
 @import '@/assets/css/main.css';
 
-/* Общие стили для страницы товара */
-
 .product-page {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 20px;
-	padding: 40px;
-	background-color: #f7f7f7;
+	padding: 60px;
+	background-color: #ffffff;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 40px;
 }
 
-/* Стили для изображения товара */
 .product-image {
 	width: 100%;
 	max-width: 500px;
@@ -18,13 +18,11 @@
 	margin-bottom: 20px;
 }
 
-/* Стили для блока с информацией о товаре */
 .product-info {
 	display: flex;
 	flex-direction: column;
 }
 
-/* Название товара */
 .product-info h1 {
 	font-size: 32px;
 	font-weight: bold;
@@ -32,7 +30,6 @@
 	margin-bottom: 10px;
 }
 
-/* Цена товара */
 .product-info .price {
 	font-size: 24px;
 	font-weight: bold;
@@ -40,21 +37,18 @@
 	margin-bottom: 20px;
 }
 
-/* Описание товара */
 .product-info .description {
 	font-size: 16px;
 	color: #555;
 	margin-bottom: 20px;
 }
 
-/* Характеристики товара */
 .product-info .characteristics {
 	font-size: 14px;
 	color: #777;
 	margin-bottom: 20px;
 }
 
-/* Кнопки */
 .product-info .buy-buttons {
 	display: flex;
 	gap: 15px;
@@ -89,8 +83,7 @@
 	background-color: #e1e1e1;
 }
 
-
-.not-found{
+.not-found {
 	display: grid;
 	width: 100%;
 	height: auto;
@@ -99,16 +92,12 @@
 	align-items: center;
 	text-align: center;
 	padding: 15% 0;
-	
 }
 
-.not-found__text{
+.not-found__text {
 	font-size: 3rem;
 }
 
-
-
-/* Для мобильных устройств */
 @media (max-width: 768px) {
 	.product-page {
 		grid-template-columns: 1fr;
@@ -129,5 +118,100 @@
 
 	.product-info .characteristics {
 		font-size: 12px;
+	}
+}
+
+.carousel-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+}
+
+.main-slider {
+	width: 100%;
+	max-width: 400px;
+	height: 350px;
+}
+
+.main-slider img {
+	width: 100%;
+	height: auto;
+	object-fit: contain;
+}
+
+.thumb-slider {
+	width: 100%;
+	max-width: 90%;
+	height: auto;
+	display: flex;
+	overflow-x: auto;
+	padding-left: 10px;
+}
+
+.thumb-slider img {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: transform 0.3s;
+}
+
+.thumb-slider img:hover {
+	transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+	.main-slider {
+		max-width: 300px;
+		height: 250px;
+	}
+
+	.thumb-slider {
+		max-width: 300px;
+		height: auto;
+	}
+
+	.thumb-slider img {
+		width: 100%;
+		height: auto;
+	}
+}
+
+.swiper-button-next {
+	display: none;
+	color: var(--caret-color);
+	@media (max-width: 1023px) {
+		display: none;
+	}
+}
+
+.swiper-button-prev {
+	display: none;
+	color: var(--caret-color);
+	@media (max-width: 1023px) {
+		display: none;
+	}
+}
+
+.swiper-wrapper {
+	width: 100%;
+}
+
+
+.button--container{
+	z-index: 3;
+	display: flex;
+	justify-content: start;
+	flex-direction: row;
+	width: 100%;
+	@media (max-width: 1023px) {
+		display: flex;
+		justify-content: start;
+		flex-direction: row;
+		width: 100%;
+		
 	}
 }
