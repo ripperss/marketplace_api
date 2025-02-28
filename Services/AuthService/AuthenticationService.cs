@@ -68,5 +68,5 @@ public class AuthenticationService : IAuthenticationService
         
         var token = _jwtService.GenerateJwtToken(existingUser);
         return token;
-    }
+    } 
 }
