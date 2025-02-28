@@ -39,6 +39,17 @@ const products = [
       '/img/tshirt2.jpg',
     ],
   },
+  {
+    id: 3,
+    name: 'Куртка',
+    price: 15000,
+    description: 'Качественная куртка из 100% хлопка.',
+    characteristics: 'Размер M, цвет белый',
+    images: [
+      '/img/tshirt1.jpg',
+      '/img/tshirt2.jpg',
+    ],
+  },
 ];
 
   // Получаем параметры маршрута
