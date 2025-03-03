@@ -2,12 +2,16 @@
 
 .product-list {
 	display: grid;
-    grid-template-columns: repeat(6, calc(15% - 4px));
+    grid-template-columns: repeat(6, calc(15.5% - 4px));
 	justify-content: center;
 	align-items: center;
 	gap: 30px;
 	max-height: auto;
 	padding: 20px 50px;
+	@media (max-width: 1279px) {
+		grid-template-columns: repeat(4,calc(25% - 4px));
+	}
+	
 	@media (max-width: 767px) {
 		grid-template-columns: repeat(2, calc(50% - 4px));
 		grid-auto-flow: dense;

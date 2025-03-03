@@ -93,6 +93,8 @@ const thumbsSwiper = ref(null);
         </SwiperSlide>
       </Swiper>
 
+
+
       <!-- Миниатюры -->
       <Swiper
         :modules="[Thumbs]"
@@ -130,6 +132,7 @@ const thumbsSwiper = ref(null);
       <Button @click="goBack">Вернуться назад</Button>
     </nuxt-link>
   </div>
+
 </template>
 
 <style scoped>
