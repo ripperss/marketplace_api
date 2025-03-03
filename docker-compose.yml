@@ -1,0 +1,6 @@
+﻿namespace marketplace_api
+{
+    public class docker_compose
+    {
+    }
+}
