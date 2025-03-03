@@ -2,7 +2,7 @@
 
 .product-list {
 	display: grid;
-    grid-template-columns: repeat(6, calc(15% - 4px));
+    grid-template-columns: repeat(6, calc(15.5% - 4px));
 	justify-content: center;
 	align-items: center;
 	gap: 30px;

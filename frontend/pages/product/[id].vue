@@ -93,6 +93,12 @@ const thumbsSwiper = ref(null);
         </SwiperSlide>
       </Swiper>
 
+
+      <!--.uagb-block-23b6d8ba.wp-block-uagb-image .wp-block-uagb-image__figure img{
+		width:1200px;
+		height: 500px;
+}-->
+
       <!-- Миниатюры -->
       <Swiper
         :modules="[Thumbs]"
