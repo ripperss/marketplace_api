@@ -85,6 +85,7 @@ builder.Services.AddScoped<IValidator<UserDto>,UserDtoValidator>();
 builder.Services.AddScoped<IValidator<ProductDto>,ProductDtoValidator>();
 builder.Services.AddScoped<IValidator<ReviewRequestDto>,ReviewRequestDtoValidator>();
 builder.Services.AddScoped<IValidator<ReviewResponseDto>,ReviewResponseDtoValidator>();
+builder.Services.AddScoped<IValidator<AdminDto>,AdminDtoValidate>();
 
 builder.Services.AddScoped<IRedisService, RedisService>();
 builder.Services.AddScoped<IProductViewHistoryRepository,ProductViewHistoryRepository>();
@@ -98,6 +99,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddScoped<CustomRequestValidateReviewFilter>();
 builder.Services.AddScoped<CustomResponseValidateReviewFilter>();
+builder.Services.AddScoped<CustomAdminValidteFilter>();
 
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
