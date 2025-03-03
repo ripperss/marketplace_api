@@ -1,11 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using marketplace_api.CustomFilter;
+using marketplace_api.Models;
+using marketplace_api.ModelsDto;
+using marketplace_api.Services.AuthService;
+using Microsoft.AspNetCore.Mvc;
 
-namespace marketplace_api.Controllers
+namespace marketplace_api.Controllers;
+
+[ApiController]
+[Route("api/admin/auth")]
+[ServiceFilter(typeof(CustomAdminValidteFilter))]
+public class AuthAdminController : ControllerBase
 {
-    [ApiController]
-    [Route("api/admin/auth")]
-    public class AuthAdminController : ControllerBase
+    private readonly IMapper _mapper;
+    private readonly IAuthenticationService _authenticationService;
+    
+    public AuthAdminController(IMapper mapper, IAuthenticationService authenticationService)
     {
-        
+        _mapper = mapper;
+        _authenticationService = authenticationService;
+    }
+
+    [Route("login")]
+    [HttpPost]
+    public async Task<IActionResult> Login(AdminDto adminDto)
+    {
+        if (adminDto.Code == "3347MM__rer")
+        {
+            var user = _mapper.Map<User>(adminDto);
+            user.Role = Role.Admin;
+            var sessiontoken = HttpContext.Request.Cookies["sessionToken"];
+            await _authenticationService.LoginAsync(user, sessiontoken);
+
+            return Ok();
+        }
+
+        return BadRequest();
     }
 }
