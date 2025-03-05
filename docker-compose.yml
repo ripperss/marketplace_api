@@ -1,6 +1,50 @@
-﻿namespace marketplace_api
-{
-    public class docker_compose
-    {
-    }
-}
+﻿services:
+  marketplace-api:
+    image: ${DOCKER_REGISTRY-}marketplaceapi
+    build:
+      context: .
+      dockerfile: marketplace-api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+    container_name: marketplace-api
+    networks:
+      - market
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"  
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: YourStrongPassword123!
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    container_name: postgres-db
+    networks:
+      - market
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"  
+    volumes:
+      - redis_data:/data
+    container_name: my-redis-container
+    networks:
+      - market
+
+networks:
+  market:
+    driver: bridge  
+
+volumes:
+  db_data:
+  redis_data:
