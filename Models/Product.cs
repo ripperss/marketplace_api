@@ -13,6 +13,7 @@ public class Product
     public int UserId { get; set; } 
     public int CountProduct { get; set; }
     public int CountViewProduct { get; set; }
+    public string imagePath { get; set; }
 
 
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
