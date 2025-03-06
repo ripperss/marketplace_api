@@ -113,7 +113,7 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
-        //dbContext.Database.Migrate();
+        dbContext.Database.Migrate();
         Console.WriteLine("Миграции успешно применены.");
     }
     catch (Exception ex)
