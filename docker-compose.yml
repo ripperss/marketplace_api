@@ -27,7 +27,7 @@
       POSTGRES_PASSWORD: YourStrongPassword123!
     volumes:
       - db_data:/var/lib/postgresql/data
-    container_name: postgres-dbs
+    container_name: postgres-db
     networks:
       - market
 
