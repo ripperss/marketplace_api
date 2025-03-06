@@ -14,7 +14,7 @@ import '@/assets/css/productPage.css'
 const route = useRoute();
 const productId = route.params.id;
 
-// Массив товаров (в реальном проекте данные берутся из базы)
+// Массив товаров (в/ реальном проекте данные берутся из базы)
 const products = [
   {
     id: 1,
