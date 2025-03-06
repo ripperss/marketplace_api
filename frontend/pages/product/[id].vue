@@ -52,7 +52,8 @@ const products = [
   },
 ];
 
-  // Получаем параметры маршрута
+
+// Получаем параметры маршрута
 const router = useRouter(); // Получаем доступ к маршрутизатору
 
 // Функция "Назад"
@@ -76,16 +77,11 @@ const thumbsSwiper = ref(null);
     <div class="carousel-container">
       <div class="button--container">
         <nuxt-link :to="goBack">
-      <button class="back--button" @click="goBack">← Назад</button>
-    </nuxt-link>
-    </div>
-      <Swiper
-        :modules="[Navigation, Thumbs, Zoom]"
-        :navigation="false"
-        :thumbs="{ swiper: thumbsSwiper }"
-        :zoom="true"
-        class="main-slider"
-      >
+          <button class="back--button" @click="goBack">← Назад</button>
+        </nuxt-link>
+      </div>
+      <Swiper :modules="[Navigation, Thumbs, Zoom]" :navigation="false" :thumbs="{ swiper: thumbsSwiper }" :zoom="true"
+        class="main-slider">
         <SwiperSlide v-for="(image, index) in product.images" :key="index">
           <div class="swiper-zoom-container">
             <img src="@/assets/img/card.jpeg" :alt="'Фото ' + (index + 1)" />
@@ -96,13 +92,8 @@ const thumbsSwiper = ref(null);
 
 
       <!-- Миниатюры -->
-      <Swiper
-        :modules="[Thumbs]"
-        :space-between="10"
-        :slidesPerView="4"
-        @swiper="(swiper) => (thumbsSwiper = swiper)"
-        class="thumb-slider"
-      >
+      <Swiper :modules="[Thumbs]" :space-between="10" :slidesPerView="4" @swiper="(swiper) => (thumbsSwiper = swiper)"
+        class="thumb-slider">
         <SwiperSlide v-for="(image, index) in product.images" :key="index">
           <img src="@/assets/img/card.jpeg" :alt="'Миниатюра ' + (index + 1)" />
         </SwiperSlide>
@@ -135,5 +126,4 @@ const thumbsSwiper = ref(null);
 
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
