@@ -3,14 +3,14 @@
     image: ${DOCKER_REGISTRY-}marketplaceapi
     build:
       context: .
-      dockerfile: marketplace-api/Dockerfile
+      dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
     ports:
       - "8080:8080"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - /Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
     container_name: marketplace-api
     networks:
       - market
