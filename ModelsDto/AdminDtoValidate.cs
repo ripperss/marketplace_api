@@ -13,3 +13,4 @@ public class AdminDtoValidate : AbstractValidator<AdminDto>
             .Must(pass => pass == "scammmm");
     }
 }
+
