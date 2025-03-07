@@ -3,18 +3,7 @@ import { ref, computed } from 'vue';
 import '@/assets/css/cart.css'
 
 // Пример списка товаров в корзине (потом можно заменить на данные с бэка)
-const cartItems = ref([
-    { id: 1, name: 'Кроссовки', price: 10000, quantity: 1 },
-    { id: 2, name: 'Футболка', price: 2500, quantity: 2 },
-    { id: 3, name: 'Кроссовки', price: 10000, quantity: 1 },
-    { id: 4, name: 'Футболка', price: 2500, quantity: 2 },
-    { id: 5, name: 'Кроссовки', price: 10000, quantity: 1 },
-    { id: 6, name: 'Футболка', price: 2500, quantity: 2 },
-    { id: 7, name: 'Кроссовки', price: 10000, quantity: 1 },
-    { id: 8, name: 'Футболка', price: 2500, quantity: 2 },
-    { id: 9, name: 'Кроссовки', price: 10000, quantity: 1 },
-    { id: 10, name: 'Футболка', price: 2500, quantity: 2 },
-]);
+const cartItems = ref([]);
 
 // Увеличение количества
 const increaseQuantity = (item) => {
