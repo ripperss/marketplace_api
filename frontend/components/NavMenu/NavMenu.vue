@@ -41,10 +41,6 @@ const handleKeyup = (event) => {
                         <span class="nav--pc_icon nav--pc_icon__delivery"></span>
                         Доставки
                     </NuxtLink>
-                    <NuxtLink to="/favorites" class="nav--pc_link" exact-active-class="active">
-                        <span class="nav--pc_icon nav--pc_icon__favorite"></span>
-                        Избранное
-                    </NuxtLink>
                     <NuxtLink to="/profile" class="nav--pc_link" exact-active-class="active">
                         <span class="nav--pc_icon nav--pc_icon__profile"></span>
                         Профиль
@@ -65,9 +61,6 @@ const handleKeyup = (event) => {
                 </NuxtLink>
                 <NuxtLink to="/cart" class="nav--pc_link" exact-active-class="active">
                     <span class="nav--pc_icon nav--pc_icon__cart"></span>
-                </NuxtLink>
-                <NuxtLink to="/favorites" class="nav--pc_link" exact-active-class="active">
-                    <span class="nav--pc_icon nav--pc_icon__favorite"></span>
                 </NuxtLink>
                 <NuxtLink to="/profile" class="nav--pc_link" exact-active-class="active">
                     <span class="nav--pc_icon nav--pc_icon__profile"></span>
