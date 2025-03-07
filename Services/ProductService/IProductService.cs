@@ -12,5 +12,5 @@ public interface IProductService
     Task DeleteProductAsync(int productId);
     Task<User> GetSellerProductsAsync(int productId);
     Task<Product> PatchProductAsync(JsonPatchDocument<Product> productPatch,int productId);
-    public Task<ICollection<Product>> GetProductByNameAsync(string name);
+    Task<ICollection<Product>> GetProductByNameAsync(string name);
 }

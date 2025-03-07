@@ -47,13 +47,15 @@ public class AuthenticationService : IAuthenticationService
             throw new ArgumentNullException(nameof(user), "User cannot be null");
         }
 
-        var existingUser = await _userService.GetUserByNameAsync(user.Name);
+        var existingUser = await _userService.GetUserByEmailAsync(user.Email);
 
         if (existingUser == null)
         {
             throw new NotFoundExeption("User not found");
         }
         existingUser.Role = user.Role;
+
+        await _userService.UpdateUserAsync(existingUser, existingUser.Id);
 
         var passwordHasher = new PasswordHasher<User>();
         var verificationResult = passwordHasher.VerifyHashedPassword(existingUser, existingUser.HashPassword, user.HashPassword);

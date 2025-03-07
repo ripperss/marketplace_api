@@ -82,4 +82,15 @@ public class UserService : IUserService
 
         return result;
     }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        if(email == null)
+        {
+            throw new ArgumentNullException("email");
+        }
+
+        var user = await _userRepository.GetUserByEmailAsync(email);
+        return user;
+    }
 }

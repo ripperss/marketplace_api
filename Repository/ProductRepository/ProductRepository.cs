@@ -55,15 +55,13 @@ public class ProductRepository : IProductRepository
 
     public async Task<ICollection<Product>> GetByName(string name)
     {
-        var products = from product in _context.Products
-                    where product.Name == name
-                    select product;
+        var products = await _context.Products.Where(p => p.Name == name).ToListAsync();
         if (!products.Any())
         {
             throw new NotFoundExeption("Продуктов с данным именем не существует");
         }
 
-        return await products.ToListAsync();
+        return products;
     }
 
     public  async Task<List<Product>> GetProductOdPage(int id)

@@ -13,6 +13,6 @@ public interface IUserService
     Task<User> GetUserByNameAsync(string name);
     Task<User> CreateUserAsync(User user);
     Task<List<User>> GetAllUsersAsync();
-
+    Task<User> GetUserByEmailAsync(string email);
 
 }
