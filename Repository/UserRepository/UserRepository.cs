@@ -110,4 +110,15 @@ public class UserRepository : IUserRepository
 
         return userUpdate;
     }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        var user =  await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+        if (user == null)
+        {
+            throw new NotFoundExeption("Пользователя с данным Email  нет в баззе данных");
+        }
+
+        return user;
+    }
 }

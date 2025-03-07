@@ -8,4 +8,5 @@ public class UserResponseDto
     public string Name { get; set; }
     public string Email { get; set; }
     public DateTime DateRegistered { get; set; } = DateTime.UtcNow;
+    public Role Role { get; set; }
 }

@@ -16,13 +16,13 @@ public class AuthSellerController : ControllerBase
 {
     private readonly ILogger<AuthSellerController> _logger;
     private readonly IMapper _mapper;
-    private readonly IValidator<UserDto> _validator;
+    private readonly IValidator<UserLoginDto> _validator;
     private readonly IAuthenticationService _authenticationService;
     private readonly Services.MailService _mail;
 
     public AuthSellerController(ILogger<AuthSellerController> logger
         , IMapper mapper
-        , IValidator<UserDto> validator
+        , IValidator<UserLoginDto> validator
         , IAuthenticationService authenticationService
         , Services.MailService mail
         )
@@ -36,7 +36,7 @@ public class AuthSellerController : ControllerBase
 
     [Route("login")]
     [HttpPost]
-    public async Task<IActionResult> Login(UserDto userDto)
+    public async Task<IActionResult> Login(UserLoginDto userDto)
     {
         try
         {

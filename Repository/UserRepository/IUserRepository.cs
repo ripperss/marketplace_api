@@ -13,4 +13,5 @@ public interface IUserRepository
     Task<User> UpdateUserAsync(User user,int Id);
     Task DeleteUserAsync(int id);
     Task<User> PatchUserAsync(JsonPatchDocument<User> user,int Id);
+    Task<User> GetUserByEmailAsync(string email);
 }

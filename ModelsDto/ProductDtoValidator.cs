@@ -2,7 +2,7 @@
 
 namespace marketplace_api.ModelsDto;
 
-public class ProductDtoValidator : AbstractValidator<ProductDto>
+public class ProductDtoValidator : AbstractValidator<ProductDtoResponse>
 {
     public ProductDtoValidator()
     {
