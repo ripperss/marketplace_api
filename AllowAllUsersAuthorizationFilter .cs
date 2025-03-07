@@ -10,3 +10,4 @@ public class AllowAllUsersAuthorizationFilter : IDashboardAuthorizationFilter
         return true;
     }
 }
+

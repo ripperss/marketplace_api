@@ -206,7 +206,7 @@ header {
 	left: 0;
 	padding: 0 4px;
 	padding-bottom: 20px;
-	grid-template-columns: 20% 20% 20% 20% 20%;
+	grid-template-columns: 25% 25% 25% 25%;
 	grid-template-rows: none;
 	background-color: #ffffff;
 	align-items: center;

@@ -1,55 +1,43 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';  // Импортируем useRouter
-import CardItem from '@/components/CardItem/CardItem.vue';  // Импортируем компонент карточки товара
-import '@/assets/css/search.css'
+import { ref, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-const route = useRoute();  // Получаем текущий маршрут
-const router = useRouter();  // Инициализируем router
+// Получаем текущий маршрут
+const route = useRoute();  
+const router = useRouter();  
 
+// Строка поиска и отфильтрованные товары
 const searchQuery = ref(route.query.q || '');  // Извлекаем запрос из параметров URL
 const filteredProducts = ref([]);  // Массив отфильтрованных товаров
 
-// Пример товаров (замени на реальный источник данных)
-const products = [
-    { id: 1, name: 'Кроссовки', price: 10000, description: 'Модные кроссовки' },
-    { id: 2, name: 'Футболка', price: 2500, description: 'Качественная футболка' },
-    { id: 3, name: 'Куртка', price: 15000, description: 'Теплая зимняя куртка' },
-    { id: 4, name: 'Сумка', price: 5000, description: 'Стильная сумка' },
-    { id: 5, name: 'Футболка', price: 2500, description: 'Качественная футболка' },
-    { id: 6, name: 'Футболка', price: 2500, description: 'Качественная футболка' },
-    { id: 7, name: 'Футболка', price: 2500, description: 'Качественная футболка' },
-    { id: 8, name: 'Футболка', price: 2500, description: 'Качественная футболка' },
-    { id: 9, name: 'Футболка', price: 2500, description: 'Качественная футболка' },
-    { id: 10, name: 'Футболка', price: 2500, description: 'Качественная футболка' },
-];
+// Функция фильтрации товаров (для работы с API)
+const fetchProducts = async () => {
+  try {
+    // Отправляем запрос с параметром поиска
+    const response = await fetch(`http://localhost:8080/product/name?name=${searchQuery.value}`);
+    const data = await response.json();
+    
+    // Загружаем полученные товары
+    filteredProducts.value = data;  // Здесь data — это список товаров, который пришел с сервера
+  } catch (error) {
+    console.error('Ошибка при загрузке товаров:', error);
+  }
+};
 
-// Функция для перехода к странице товара по его id
+// Функция для перехода на страницу товара по его id
 const goToProduct = (id) => {
   router.push(`/product/${id}`);  // Перенаправление на страницу товара
 }
 
-// Функция фильтрации товаров
-const filterProducts = () => {
-    if (!searchQuery.value) {
-        filteredProducts.value = products;
-        return;
-    }
-
-    filteredProducts.value = products.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-};
-
 // Слежение за изменением параметра в URL для обновления фильтра
 watch(() => route.query.q, (newQuery) => {
-    searchQuery.value = newQuery || '';  // Обновляем строку поиска
-    filterProducts();  // Фильтруем товары заново
+  searchQuery.value = newQuery || '';  // Обновляем строку поиска
+  fetchProducts();  // Загружаем товары заново при изменении поиска
 });
 
+// Вызываем фильтрацию при монтировании страницы
 onMounted(() => {
-    filterProducts();  // Вызываем фильтрацию при загрузке страницы
+  fetchProducts();  // Загружаем товары при первой загрузке страницы
 });
 </script>
 

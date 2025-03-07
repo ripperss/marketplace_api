@@ -15,42 +15,26 @@ const route = useRoute();
 const productId = route.params.id;
 
 // Массив товаров (в/ реальном проекте данные берутся из базы)
-const products = [
-  {
-    id: 1,
-    name: 'Кроссовки',
-    price: 10000,
-    description: 'Модные кроссовки для активных людей.',
-    characteristics: 'Размер 42, цвет черный, материал: кожа',
-    images: [
-      '/img/product1.jpg',
-      '/img/product2.jpg',
-      '/img/product3.jpg',
-    ],
-  },
-  {
-    id: 2,
-    name: 'Футболка',
-    price: 2500,
-    description: 'Качественная футболка из 100% хлопка.',
-    characteristics: 'Размер M, цвет белый',
-    images: [
-      '/img/tshirt1.jpg',
-      '/img/tshirt2.jpg',
-    ],
-  },
-  {
-    id: 3,
-    name: 'Куртка',
-    price: 15000,
-    description: 'Качественная куртка из 100% хлопка.',
-    characteristics: 'Размер M, цвет белый',
-    images: [
-      '/img/tshirt1.jpg',
-      '/img/tshirt2.jpg',
-    ],
-  },
-];
+const product = ref(null); // Храним загруженный товар
+const thumbsSwiper = ref(null);
+
+
+const fetchProduct = async () => {
+  try {
+    const response = await fetch(`http://localhost:8080/product/product/${productId}`);
+    const data = await response.json();
+    product.value = {
+      ...data,
+      images: [data.imagePath] // Если API возвращает только 1 картинку
+    };
+  } catch (error) {
+    console.error('Ошибка загрузки товара:', error);
+  } finally {
+    isLoading.value = false; // Скрываем загрузку
+  }
+};
+// Загружаем данные при монтировании
+onMounted(fetchProduct);
 
 
 // Получаем параметры маршрута
@@ -61,18 +45,29 @@ const goBack = () => {
   router.go(-1); // Вызов router.back() для возврата на предыдущую страницу
 };
 
+const isLoading = ref(true);
 
-// Находим нужный товар
-const product = products.find(p => p.id === Number(productId));
 
-// Для миниатюр (thumbs)
-const thumbsSwiper = ref(null);
 </script>
 
 <template>
   <NavMenu />
-
-  <div v-if="product" class="product-page">
+  <div v-if="isLoading" class="loading">
+    <div class="flex flex-col space-y-3">
+      <Skeleton class="h-[350px] w-full rounded-lg" /> <!-- Скелетон для изображения -->
+      <div class="space-y-4">
+        <Skeleton class="h-8 w-[60%]" /> <!-- Скелетон для названия товара -->
+        <Skeleton class="h-6 w-[30%]" /> <!-- Скелетон для цены -->
+        <Skeleton class="h-4 w-full" /> <!-- Скелетон для описания -->
+        <Skeleton class="h-4 w-[80%]" /> <!-- Скелетон для характеристик -->
+      </div>
+      <div class="buy-buttons">
+        <Skeleton class="h-12 w-[48%] rounded-lg" /> <!-- Скелетон для кнопки "Добавить в корзину" -->
+        <Skeleton class="h-12 w-[48%] rounded-lg" /> <!-- Скелетон для кнопки "Перейти в корзину" -->
+      </div>
+    </div>
+  </div>
+  <div v-else-if="product" class="product-page">
     <!-- Карусель с увеличением -->
     <div class="carousel-container">
       <div class="button--container">
@@ -84,7 +79,7 @@ const thumbsSwiper = ref(null);
         class="main-slider">
         <SwiperSlide v-for="(image, index) in product.images" :key="index">
           <div class="swiper-zoom-container">
-            <img src="@/assets/img/card.jpeg" :alt="'Фото ' + (index + 1)" />
+            <img :src="product.imagePath" :alt="'Фото ' + (index + 1)" />
           </div>
         </SwiperSlide>
       </Swiper>
@@ -95,7 +90,7 @@ const thumbsSwiper = ref(null);
       <Swiper :modules="[Thumbs]" :space-between="10" :slidesPerView="4" @swiper="(swiper) => (thumbsSwiper = swiper)"
         class="thumb-slider">
         <SwiperSlide v-for="(image, index) in product.images" :key="index">
-          <img src="@/assets/img/card.jpeg" :alt="'Миниатюра ' + (index + 1)" />
+          <img :src="product.imagePath" :alt="'Миниатюра ' + (index + 1)" />
         </SwiperSlide>
       </Swiper>
     </div>

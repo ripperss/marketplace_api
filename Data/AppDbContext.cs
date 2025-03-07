@@ -19,7 +19,6 @@ public class AppDbContext : DbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options,IConfiguration configuration) : base(options)
     {
-        Database.EnsureCreated();   
         _configuration = configuration;
     }
 

@@ -108,6 +108,21 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    try
+    {
+        dbContext.Database.Migrate();
+        Console.WriteLine("Миграции успешно применены.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Ошибка при применении миграций: {ex.Message}");
+        throw; 
+    }
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -129,11 +144,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapGet("dd",(AppDbContext context) =>
-{
-    context.Database.EnsureCreated();
-    return Results.Ok(context.Users);
-});
 app.Run();
 
 
