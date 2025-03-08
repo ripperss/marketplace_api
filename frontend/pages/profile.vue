@@ -1,20 +1,26 @@
 <script setup>
+import { NuxtLink } from '#components'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import NavMenu from '~/components/NavMenu/NavMenu.vue'
 
 const router = useRouter()
 const user = ref(null) // Данные пользователя
 const isLoading = ref(true)
 
+const goMain = () => {
+  router.push('/auth/login') // Вызов router.back() для возврата на предыдущую страницу
+};
+
 // Функция загрузки профиля
 const fetchProfile = async () => {
     try {
-        const response = await fetch('http://localhost:8080/api/profile', {
+        const response = await fetch('http://localhost:8080/user/user', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
 
-        if (!response.ok) throw new Error('Ошибка загрузки профиля')
+        if (!response.ok) throw new Error()
 
         user.value = await response.json()
     } catch (error) {
@@ -42,6 +48,7 @@ const logout = () => {
 
 <template>
     <div class="container">
+        <NavMenu />
         <h1 class="text-2xl font-bold">Личный кабинет</h1>
 
         <!-- Индикатор загрузки -->
@@ -52,7 +59,6 @@ const logout = () => {
             <div class="profile-info">
                 <p><strong>Имя:</strong> {{ user.name }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Баланс:</strong> {{ user.balance }} ₽</p>
             </div>
 
             <!-- Кнопки для разных типов пользователей -->
@@ -84,6 +90,7 @@ const logout = () => {
             </div>
         </div>
 
-        <div v-else class="error">Ошибка загрузки профиля</div>
+        <div v-else class="error" ><NuxtLink > Вы не вошли<Button @click="goMain"> Войти</Button></NuxtLink></div>
+        
     </div>
 </template>

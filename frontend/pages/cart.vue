@@ -17,6 +17,9 @@ const decreaseQuantity = (item) => {
     }
 };
 
+
+
+
 // Удаление товара
 const removeItem = (id) => {
     cartItems.value = cartItems.value.filter(item => item.id !== id);
@@ -62,3 +65,6 @@ const totalPrice = computed(() => {
 </template>
 
 <style scoped></style>
+
+
+
