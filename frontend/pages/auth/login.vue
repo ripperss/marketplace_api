@@ -6,14 +6,18 @@ import NavMenu from '@/components/NavMenu/NavMenu.vue'
 
 const router = useRouter()
 
-
 const form = ref({
   email: '',
-  password: ''
+  hashPassword: ''
 })
 
+const errorMessage = ref('')
+
 const login = async () => {
+  errorMessage.value = '' // Очищаем ошибку перед новой попыткой
+
   try {
+    // Вход как пользователь
     const userResponse = await fetch('http://localhost:8080/authuser/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -21,36 +25,39 @@ const login = async () => {
     })
 
     if (userResponse.ok) {
-      const userData = await userResponse.json()
-      console.log('Вход как пользователь:', userData)
-      router.push('/profile') // Переход на страницу профиля
+      console.log('Вход как пользователь')
+      router.push('/profile') // Перенаправление на страницу профиля
       return
     }
 
-    const sellerResponse = await fetch('http://localhost:8080/AuthSeller/login', {
+    // Вход как продавец
+    const sellerResponse = await fetch('http://localhost:8080/authseller/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form.value)
     })
 
     if (sellerResponse.ok) {
-      const sellerData = await sellerResponse.json()
-      console.log('Вход как продавец:', sellerData)
-      router.push('/seller-dashboard') // Переход в панель управления магазином
+      console.log('Вход как продавец')
+      router.push('/seller-dashboard') // Перенаправление в панель продавца
       return
     }
 
-    console.error('Ошибка: неверные данные')
+    // Если оба запроса неуспешны
+    errorMessage.value = 'Неверный email или пароль'
   } catch (error) {
     console.error('Ошибка входа:', error)
+    errorMessage.value = 'Ошибка сервера. Попробуйте позже'
   }
 }
 </script>
 
+
+
 <template>
-    <NavMenu />
+  <NavMenu />
   <div class="flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
+    <div class="w-full max-w-md bg-white p-6 rounded-lg">
       <h2 class="text-xl font-semibold text-center mb-4">Вход</h2>
 
       <form @submit.prevent="login" class="space-y-4">
@@ -67,22 +74,22 @@ const login = async () => {
         <div>
           <label class="block text-sm font-medium text-gray-700">Пароль</label>
           <input
-            v-model="form.password"
+            v-model="form.hashPassword"
             type="password"
             placeholder="Введите пароль"
             class="w-full p-2 border rounded-md"
           />
         </div>
 
+        <p v-if="errorMessage" class="text-red-500 text-sm text-center">{{ errorMessage }}</p>
+
         <button type="submit" class="w-full bg-var-color text-white p-2 rounded-md">
           Войти
         </button>
       </form>
+      <NuxtLink to="/auth/reg">
+        <p class="rout-to-reg">Зарегистрироваться</p>
+      </NuxtLink>
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Дополнительные стили для мобильных экранов */
-
-</style>

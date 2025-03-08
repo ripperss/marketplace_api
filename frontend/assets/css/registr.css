@@ -11,7 +11,7 @@
 .min-h-screen {
 	min-height: 100%;
 	overflow: hidden;
-	margin-top: 12%;
+	margin-top: 10%;
 	padding-left: 20px;
 	padding-right: 20px;
 }
@@ -23,3 +23,15 @@
 		padding: 1rem;
 	}
 }
+
+
+.rout-to-reg{
+	font-style: italic;
+	margin: 10px 0;
+}
+.rout-to-reg:hover{
+	cursor: pointer;
+	color: rgb(67, 67, 67);
+	
+}
+

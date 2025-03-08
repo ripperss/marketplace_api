@@ -20,19 +20,22 @@ public class AuthUserController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ICartService _cartService;
     private readonly MailService _mailService;
+    private readonly IValidator<UserLoginDto> _loginValid;
 
     public AuthUserController(
         IAuthenticationService authenticationService
         ,IMapper mapper
         ,IValidator<UserDto> validator
         , ICartService cartService
-        , MailService mailService)
+        , MailService mailService
+        ,   IValidator<UserLoginDto> loginValid)
     {
         _authenticationService = authenticationService;
         _mapper = mapper;
         _validator = validator;
         _cartService = cartService;
         _mailService = mailService;
+        _loginValid = loginValid;
     }
 
     [HttpPost]
@@ -71,11 +74,11 @@ public class AuthUserController : ControllerBase
 
     [HttpPost]
     [Route("log")]
-    public async Task<IActionResult> Login(UserDto userDto)
+    public async Task<IActionResult> Login(UserLoginDto userDto)
     {
         try
         {
-            var validate = await _validator.ValidateAsync(userDto);
+            var validate = await _loginValid.ValidateAsync(userDto);
             if(!validate.IsValid)
             {
                 return BadRequest("Данные не прошли валидацию");

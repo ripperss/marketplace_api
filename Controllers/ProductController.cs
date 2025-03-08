@@ -19,14 +19,14 @@ public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
     private readonly IMapper _mapper;
-    private readonly IValidator<ProductDto> _validator;
+    private readonly IValidator<ProductDtoResponse> _validator;
     private readonly ILogger<ProductController> _logger;
     private readonly JwtService _jwtService;
     private readonly IProductViewHistoryService _productViewHistoryService;
 
     public ProductController(IProductService productService
         , IMapper mapper
-        , IValidator<ProductDto> validator
+        , IValidator<ProductDtoResponse> validator
         , JwtService jwtService
         , ILogger<ProductController> logger
         , IProductViewHistoryService productViewHistoryService)
@@ -42,7 +42,7 @@ public class ProductController : ControllerBase
     [HttpPost]
     [Route("create")]
     [Authorize(Roles ="Seller,Admin")]
-    public async Task<IActionResult> CreateProductAsync(ProductDto productDto)
+    public async Task<IActionResult> CreateProductAsync(ProductDtoResponse productDto)
     {
         _logger.LogInformation("Начато создание продукта");
 
@@ -116,7 +116,7 @@ public class ProductController : ControllerBase
     [HttpPut]
     [Route("update/{productId}")]
     [Authorize(Roles ="Admin,Seller")]
-    public async Task<IActionResult> UpdateProductAsync(ProductDto productDto,int productId)
+    public async Task<IActionResult> UpdateProductAsync(ProductDtoResponse productDto,int productId)
     {
         _logger.LogInformation("Обновление продукта с ID: {ProductId}", productId);
 
@@ -177,7 +177,7 @@ public class ProductController : ControllerBase
         {
             var products = await _productService.GetProductByNameAsync(name);
 
-            var result = _mapper.Map<ProductDto>(products);
+            var result = _mapper.Map<List<ProductDto>>(products);
 
             return Ok(result);
         }
@@ -196,7 +196,7 @@ public class ProductController : ControllerBase
         {
             var saller = await _productService.GetSellerProductsAsync(productId);
 
-            return Ok(_mapper.Map<UserDto>(saller));
+            return Ok(_mapper.Map<UserResponseDto>(saller));
         }
         catch (NotFoundExeption ex)
         {
@@ -213,10 +213,7 @@ public class ProductController : ControllerBase
         {
             await _productService.DeleteProductAsync(productId);
 
-            var userId =  _jwtService.GetIdUser(HttpContext);
-            await _productViewHistoryService.DeleteHistoryAsync(userId,productId);
-
-            return NotFound();
+            return NoContent();
         }
         catch (NotFoundExeption ex)
         {

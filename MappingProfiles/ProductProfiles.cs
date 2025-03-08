@@ -12,6 +12,10 @@ public class ProductProfiles : Profile
 
         CreateMap<Product, ProductDto>()
             .ForMember(dto => dto.Id,
-            opt => opt.MapFrom(product => product.Id)); 
+            opt => opt.MapFrom(product => product.Id));
+
+        CreateMap<Product, ProductDtoResponse>();
+
+        CreateMap<ProductDtoResponse, Product>();
     }
 }

@@ -40,11 +40,14 @@ builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof
 builder.Services.AddCors(options => options
     .AddPolicy("CorsPolicy", builder => 
     {
-    builder.WithOrigins("http://localhost:3000");
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     }));
 
 builder.Services.AddAutoMapper(
-    typeof(UserProfiles)
+      typeof(UserProfiles)
     , typeof(ProductProfiles)
     , typeof(CartProductProfiles)
     , typeof(ReviewProfiles)
@@ -82,7 +85,7 @@ builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddScoped<IProductViewHistoryService,ProductViewHistoryService>();
 
 builder.Services.AddScoped<IValidator<UserDto>,UserDtoValidator>();
-builder.Services.AddScoped<IValidator<ProductDto>,ProductDtoValidator>();
+builder.Services.AddScoped<IValidator<ProductDtoResponse>,ProductDtoValidator>();
 builder.Services.AddScoped<IValidator<ReviewRequestDto>,ReviewRequestDtoValidator>();
 builder.Services.AddScoped<IValidator<ReviewResponseDto>,ReviewResponseDtoValidator>();
 builder.Services.AddScoped<IValidator<AdminDto>,AdminDtoValidate>();
@@ -97,6 +100,7 @@ builder.Services.AddScoped<ICartManagementService, CartManagementService>();
 builder.Services.AddScoped<IReviewRepository,ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 
+builder.Services.AddScoped<IValidator<UserLoginDto>, UserLoginDtoValidate>();
 builder.Services.AddScoped<CustomRequestValidateReviewFilter>();
 builder.Services.AddScoped<CustomResponseValidateReviewFilter>();
 builder.Services.AddScoped<CustomAdminValidteFilter>();
@@ -123,6 +127,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseCors("CorsPolicy");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -137,8 +143,6 @@ app.UseSwaggerUI(config =>
     config.RoutePrefix = string.Empty;
     config.SwaggerEndpoint("swagger/v1/swagger.json", "market API"); 
 });
-
-app.UseCors("CorsPolicy");
 
 app.MapControllerRoute(
     name: "default",
