@@ -67,6 +67,7 @@ const register = async () => {
           Зарегистрироваться
         </button>
       </form>
+      <NuxtLink to="/auth/login"><p class="rout-to-reg">Уже есть аккаунт?</p></NuxtLink> 
     </div>
   </div>
 </template>
