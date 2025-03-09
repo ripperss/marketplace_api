@@ -12,4 +12,5 @@ public class ProductDto
     public int UserId { get; set; }
     public int Id { get; set; }
     public string imagePath { get; set; }
+    public string Characteristic { get; set; }
 }
