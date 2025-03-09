@@ -7,6 +7,7 @@ using marketplace_api.Services.RedisService;
 using Hangfire;
 using marketplace_api.Services.UserService;
 using marketplace_api.Services.CartManegementService;
+using marketplace_api.ModelsDto;
 
 namespace marketplace_api.Services.AuthService;
 
@@ -37,10 +38,10 @@ public class AuthenticationService : IAuthenticationService
 
         await _userService.CreateUserAsync(user);
 
-        return "Пользователб создан";
+        return "Пользователь создан";
     }
 
-    public async Task<string> LoginAsync(User user, string sessiontoken)
+    public async Task<LoginResult> LoginAsync(User user, string sessiontoken)
     {
         if (user == null)
         {
@@ -69,6 +70,13 @@ public class AuthenticationService : IAuthenticationService
         BackgroundJob.Enqueue(() => _cartManagementService.CreateOrUpdateCart(existingUser.Id, sessiontoken));
         
         var token = _jwtService.GenerateJwtToken(existingUser);
-        return token;
+
+        var loginResult = new LoginResult()
+        {
+            Token = token,
+            Name = existingUser.Name,
+            Role = existingUser.Role,
+        };
+        return loginResult;
     } 
 }
