@@ -103,6 +103,7 @@ public class ProductRepository : IProductRepository
         product.Description = newProduct.Description;
         product.Category = newProduct.Category;
         product.Price = newProduct.Price;
+        product.Characteristic = newProduct.Characteristic;
         await _context.SaveChangesAsync();
 
         return newProduct;
