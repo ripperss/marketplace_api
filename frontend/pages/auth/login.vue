@@ -7,49 +7,40 @@ import NavMenu from '@/components/NavMenu/NavMenu.vue'
 const router = useRouter()
 
 const form = ref({
-  email: '',
-  hashPassword: ''
+  email: 'moishemg@vk.com',
+  hashPassword: '2281337dD@'
 })
 
-const errorMessage = ref('')
 
 const login = async () => {
-  errorMessage.value = '' // Очищаем ошибку перед новой попыткой
+
 
   try {
-    // Вход как пользователь
-    const userResponse = await fetch('http://localhost:8080/authuser/log', {
+    const response = await fetch('http://localhost:8080/authuser/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form.value)
+      body: JSON.stringify(form.value),
+      credentials: 'include' // ВАЖНО! Чтобы куки работали
     })
 
-    if (userResponse.ok) {
-      console.log('Вход как пользователь')
-      router.push('/profile') // Перенаправление на страницу профиля
-      return
+    console.log('Ответ сервера:', response)
+
+    if (!response.ok) {
+      throw new Error('Ошибка входа: Неверные данные')
     }
 
-    // Вход как продавец
-    const sellerResponse = await fetch('http://localhost:8080/authseller/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form.value)
-    })
+    console.log('✅ Вход выполнен! Куки установлены.')
+    router.push('/profile')
 
-    if (sellerResponse.ok) {
-      console.log('Вход как продавец')
-      router.push('/seller-dashboard') // Перенаправление в панель продавца
-      return
-    }
-
-    // Если оба запроса неуспешны
-    errorMessage.value = 'Неверный email или пароль'
   } catch (error) {
     console.error('Ошибка входа:', error)
-    errorMessage.value = 'Ошибка сервера. Попробуйте позже'
+    errorMessage.value = 'Ошибка авторизации. Проверьте email и пароль'
   }
 }
+
+
+
+
 </script>
 
 

@@ -1,30 +1,30 @@
 <script setup>
-import { NuxtLink } from '#components'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import NavMenu from '~/components/NavMenu/NavMenu.vue'
+
 
 const router = useRouter()
-const user = ref(null) // Данные пользователя
+const user = ref(null)
 const isLoading = ref(true)
 
-const goMain = () => {
-  router.push('/auth/login') // Вызов router.back() для возврата на предыдущую страницу
-};
 
-// Функция загрузки профиля
+
 const fetchProfile = async () => {
     try {
         const response = await fetch('http://localhost:8080/user/user', {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include' // ВАЖНО! Чтобы сервер видел куки
         })
 
-        if (!response.ok) throw new Error()
+        if (!response.ok) {
+            throw new Error('Не авторизован')
+        }
 
         user.value = await response.json()
     } catch (error) {
-        console.error(error)
+        console.warn('Пользователь не авторизован, редирект на логин')
+        router.push('/auth/login')
     } finally {
         isLoading.value = false
     }
@@ -32,12 +32,24 @@ const fetchProfile = async () => {
 
 onMounted(fetchProfile)
 
-// Выход из аккаунта
-const logout = () => {
-    // Очищаем токены (если есть)
-    localStorage.removeItem('token')
-    router.push('/login') // Перенаправляем на страницу входа
+const logout = async () => {
+    
+    try {
+        await fetch('http://localhost:8080/authuser/logout', { 
+            method: 'POST', 
+            credentials: 'include',
+        })
+    } catch (error) {
+        console.error('Ошибка выхода:', error)
+    }
+
+    router.push('/auth/login') // Перенаправляем на логин
 }
+
+const goMain = () => {
+  router.push('/auth/login') // Вызов router.back() для возврата на предыдущую страницу
+};
+
 </script>
 
 
@@ -78,7 +90,7 @@ const logout = () => {
             <div class="orders">
                 <h2 class="text-xl font-semibold">Мои заказы</h2>
 
-                <div v-if="user.orders.length === 0">У вас пока нет заказов</div>
+                <div div v-if="!user.orders || user.orders.length === 0">У вас пока нет заказов</div>
 
                 <div v-else class="order-list">
                     <div v-for="order in user.orders" :key="order.id" class="order-card">
@@ -90,7 +102,18 @@ const logout = () => {
             </div>
         </div>
 
-        <div v-else class="error" ><NuxtLink > Вы не вошли<Button @click="goMain"> Войти</Button></NuxtLink></div>
+
+
+        <div v-else class="error" ><NuxtLink > Вы не вошли<Button @click="pus"> Войти</Button></NuxtLink></div>
         
+
+        <div class="history">
+            <CardItem 
+                v-for="product in filteredProducts" 
+                :key="product.id" 
+                :product="product" 
+                @click="goToProduct(product.id)" 
+            />
+        </div>
     </div>
 </template>
