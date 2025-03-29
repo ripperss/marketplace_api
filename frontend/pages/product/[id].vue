@@ -48,6 +48,27 @@ const goBack = () => {
 const isLoading = ref(true);
 
 
+const addToCart = async () => {
+  try {
+    const response = await fetch(`http://localhost:8080/cart/add_pdouct_cart/${productId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Если сервер работает с куками
+    });
+
+    if (response.ok) {
+      console.log(`Товар ${productId} успешно добавлен в корзину`);
+    } else {
+      throw new Error('Ошибка при добавлении товара в корзину');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 </script>
 
 <template>
@@ -104,7 +125,7 @@ const isLoading = ref(true);
 
       <!-- Кнопки -->
       <div class="buy-buttons">
-        <button class="add-to-cart">Добавить в корзину</button>
+        <button class="add-to-cart" @click="addToCart">Добавить в корзину</button>
         <nuxt-link to="/cart">
           <button class="go-to-cart">Перейти в корзину</button>
         </nuxt-link>
