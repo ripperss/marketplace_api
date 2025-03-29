@@ -18,7 +18,6 @@ public class AuthUserController : ControllerBase
     private readonly IAuthenticationService _authenticationService;
     private readonly IValidator<UserDto> _validator; 
     private readonly IMapper _mapper;
-    private readonly ICartService _cartService;
     private readonly MailService _mailService;
     private readonly IValidator<UserLoginDto> _loginValid;
 
@@ -26,14 +25,12 @@ public class AuthUserController : ControllerBase
         IAuthenticationService authenticationService
         ,IMapper mapper
         ,IValidator<UserDto> validator
-        , ICartService cartService
         , MailService mailService
         ,   IValidator<UserLoginDto> loginValid)
     {
         _authenticationService = authenticationService;
         _mapper = mapper;
         _validator = validator;
-        _cartService = cartService;
         _mailService = mailService;
         _loginValid = loginValid;
     }
@@ -49,6 +46,7 @@ public class AuthUserController : ControllerBase
             {
                 return BadRequest("Данные не прошли валидацию");
             }
+
             var user = _mapper.Map<User>(userDto);
             var result = await _authenticationService.RegisterUserAsync(user);
 
@@ -86,14 +84,14 @@ public class AuthUserController : ControllerBase
 
             var sessiontoken = HttpContext.Request.Cookies["sessionToken"];
             var user = _mapper.Map<User>(userDto);
-            var token = await _authenticationService.LoginAsync(user, sessiontoken);
+            var loginResult = await _authenticationService.LoginAsync(user, sessiontoken);
+            loginResult.AuthResult = 200;
 
-
-            HttpContext.Response.Cookies.Append("token", token);
+            HttpContext.Response.Cookies.Append("token", loginResult.Token);
 
             BackgroundJob.Enqueue(() => _mailService.SendEmailAsync("мистер окунь вы успешно залогинились",userDto.Email));
-
-            return Ok();
+            
+            return Ok(loginResult);
         }
 
         catch (NotFoundExeption ex)

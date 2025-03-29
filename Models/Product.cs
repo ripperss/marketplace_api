@@ -14,6 +14,7 @@ public class Product
     public int CountProduct { get; set; }
     public int CountViewProduct { get; set; }
     public string imagePath { get; set; }
+    public string Characteristic { get; set; }
 
 
     public ICollection<Review> Reviews { get; set; } = new List<Review>();

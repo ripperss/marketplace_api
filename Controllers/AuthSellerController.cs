@@ -51,14 +51,15 @@ public class AuthSellerController : ControllerBase
             user.Role = Role.Seller;
 
             var sessiontoken = HttpContext.Request.Cookies["sessionToken"];
-            var token = await _authenticationService.LoginAsync(user, sessiontoken);
-            
-            HttpContext.Response.Cookies.Append("token", token);
+            var loginResult = await _authenticationService.LoginAsync(user, sessiontoken);
+            loginResult.AuthResult = 200;
+
+            HttpContext.Response.Cookies.Append("token", loginResult.Token);
             _logger.LogInformation("Успешная аутентификация продавца {UserId}", user.Id);
 
             BackgroundJob.Enqueue(() => _mail.SendEmailAsync("вы успешно прогли аутификацию на подовца", userDto.Email));
 
-            return Ok();
+            return Ok(loginResult);
         }
         catch (NotFoundExeption ex)
         {

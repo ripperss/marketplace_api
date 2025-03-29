@@ -10,4 +10,5 @@ public class ProductDtoResponse
     public string Name { get; set; }
     public string Description { get; set; }
     public string imagePath { get; set; }
+    public string Characteristic { get; set; }
 }
