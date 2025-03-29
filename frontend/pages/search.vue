@@ -2,6 +2,8 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import '@/assets/css/search.css'
+
 // Получаем текущий маршрут
 const route = useRoute();  
 const router = useRouter();  
