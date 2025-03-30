@@ -7,7 +7,10 @@ using marketplace_api.ModelsDto;
 using marketplace_api.Services;
 using marketplace_api.Services.AuthService;
 using marketplace_api.Services.CartService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace marketplace_api.Controllers;
 
@@ -106,5 +109,15 @@ public class AuthUserController : ControllerBase
         {
             return BadRequest(new { Message = ex.Message });
         }
+    }
+
+    [HttpPost]
+    [Route("logout")]
+    [Authorize(Roles = "Admin,User,Seller")]
+    public async Task<IActionResult> Logout()
+    {
+        Response.Cookies.Append("token", "");
+
+        return Ok(new { Message = "Logout successful" });
     }
 }
