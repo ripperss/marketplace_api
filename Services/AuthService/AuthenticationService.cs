@@ -54,9 +54,6 @@ public class AuthenticationService : IAuthenticationService
         {
             throw new NotFoundExeption("User not found");
         }
-        existingUser.Role = user.Role;
-
-        await _userService.UpdateUserAsync(existingUser, existingUser.Id);
 
         var passwordHasher = new PasswordHasher<User>();
         var verificationResult = passwordHasher.VerifyHashedPassword(existingUser, existingUser.HashPassword, user.HashPassword);

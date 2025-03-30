@@ -14,30 +14,49 @@ const form = ref({
 
 
 const login = async () => {
-
-
   try {
     const response = await fetch('http://localhost:8080/authuser/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form.value),
       credentials: 'include' // ВАЖНО! Чтобы куки работали
-    })
+    });
 
-    console.log('Ответ сервера:', response)
+    console.log('Ответ сервера (пользователь):', response);
 
     if (!response.ok) {
-      throw new Error('Ошибка входа: Неверные данные')
+      throw new Error('Ошибка входа: Неверные данные');
     }
 
-    console.log('✅ Вход выполнен! Куки установлены.')
-    router.push('/profile')
-
+    console.log('✅ Вход выполнен! (как пользователь)');
+    router.push('/profile');
+    return; // Если успешно, дальше не идем
   } catch (error) {
-    console.error('Ошибка входа:', error)
-    errorMessage.value = 'Ошибка авторизации. Проверьте email и пароль'
+    console.warn('⚠️ Ошибка входа как пользователь, пробуем как продавец...');
   }
-}
+
+  // Пробуем войти как продавец, если первый запрос не удался
+  try {
+    const responseSeller = await fetch('http://localhost:8080/authseller/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form.value),
+      credentials: 'include'
+    });
+
+    console.log('Ответ сервера (продавец):', responseSeller);
+
+    if (!responseSeller.ok) {
+      throw new Error('Ошибка входа: Неверные данные');
+    }
+
+    console.log('✅ Вход выполнен! (как продавец)');
+    router.push('/profile');
+  } catch (error) {
+    console.error('❌ Ошибка входа:', error);
+    errorMessage.value = 'Ошибка авторизации. Проверьте email и пароль';
+  }
+};
 
 
 

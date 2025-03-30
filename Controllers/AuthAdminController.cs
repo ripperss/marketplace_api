@@ -28,10 +28,10 @@ public class AuthAdminController : ControllerBase
         if (adminDto.Code == "3347MM__rer")
         {
             var user = _mapper.Map<User>(adminDto);
-            user.Role = Role.Admin;
             var sessiontoken = HttpContext.Request.Cookies["sessionToken"];
             var loginResult =  await _authenticationService.LoginAsync(user, sessiontoken);
             loginResult.AuthResult = 200;
+
 
             HttpContext.Response.Cookies.Append("token", loginResult.Token);
             return Ok(loginResult);
