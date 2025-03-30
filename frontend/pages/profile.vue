@@ -77,11 +77,11 @@ const goMain = () => {
             <div class="buttons">
                 <button @click="logout" class="btn">Выйти</button>
 
-                <button v-if="user.role === 'seller'" @click="router.push('/seller-dashboard')" class="btn">
+                <button v-if="user.role === 2" @click="router.push('/seller-dashboard')" class="btn">
                     Управление магазином
                 </button>
 
-                <button v-if="user.role === 'admin'" @click="router.push('/admin-panel')" class="btn">
+                <button v-if="user.role === 0" @click="router.push('/admin-panel')" class="btn">
                     Панель администратора
                 </button>
             </div>
