@@ -16,21 +16,18 @@ public class ProductViewHistoryController : ControllerBase
 {
     private readonly IProductViewHistoryService _productViewHistoryService;
     private readonly IMapper _mapper;
-    private readonly IValidator<ProductDto> _validator;
     private readonly ILogger<ProductViewHistoryController> _logger;
     private readonly JwtService _jwtService;
 
     public ProductViewHistoryController(
         IProductViewHistoryService productViewHistoryService
         , IMapper mapper
-        , IValidator<ProductDto> validator
         , ILogger<ProductViewHistoryController> logger
         , JwtService jwtService)
     {
         _productViewHistoryService = productViewHistoryService;
         _mapper = mapper;
         _jwtService = jwtService;
-        _validator = validator;
         _logger = logger;
     }
 
@@ -62,12 +59,7 @@ public class ProductViewHistoryController : ControllerBase
     public async Task<IActionResult> AddProductHistoryAsync(ProductDto productDto,int productId)
     {
         try
-        {
-            var valid = _validator.Validate(productDto);
-            if (!valid.IsValid)
-            {
-                return BadRequest(valid.Errors);
-            }
+        { 
 
             var product = _mapper.Map<Product>(productDto);
             product.Id = productId;
@@ -143,12 +135,6 @@ public class ProductViewHistoryController : ControllerBase
     {
         try
         {
-            var valid = _validator.Validate(productDto);
-            if (valid.IsValid)
-            {
-                return BadRequest(valid.Errors);
-            }
-
             var product = _mapper.Map<Product>(productDto);
 
             var userId = _jwtService.GetIdUser(HttpContext);
