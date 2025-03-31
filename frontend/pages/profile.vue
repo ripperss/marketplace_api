@@ -1,119 +1,130 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-
+import '@/assets/css/profile.css'
 
 const router = useRouter()
 const user = ref(null)
 const isLoading = ref(true)
-
-
 
 const fetchProfile = async () => {
     try {
         const response = await fetch('http://localhost:8080/user/user', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
-            credentials: 'include' // ВАЖНО! Чтобы сервер видел куки
+            credentials: 'include'
         })
 
-        if (!response.ok) {
-            throw new Error('Не авторизован')
-        }
+        if (!response.ok) throw new Error('Не авторизован')
 
         user.value = await response.json()
+
+        const ordersResponse = await fetch('http://localhost:8080/order/orders', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        })
+
+        if (ordersResponse.ok) {
+            user.value.orders = await ordersResponse.json()
+        } else {
+            throw new Error('Ошибка при загрузке заказов')
+        }
+
     } catch (error) {
-        console.warn('Пользователь не авторизован, редирект на логин')
         router.push('/auth/login')
     } finally {
         isLoading.value = false
     }
 }
 
-onMounted(fetchProfile)
+onMounted(() => {
+    fetchProfile()
+})
 
 const logout = async () => {
-    
     try {
-        await fetch('http://localhost:8080/authuser/logout', { 
-            method: 'POST', 
+        await fetch('http://localhost:8080/authuser/logout', {
+            method: 'POST',
             credentials: 'include',
         })
     } catch (error) {
         console.error('Ошибка выхода:', error)
     }
-
-    router.push('/auth/login') // Перенаправляем на логин
+    router.push('/auth/login')
 }
 
-const goMain = () => {
-  router.push('/auth/login') // Вызов router.back() для возврата на предыдущую страницу
-};
-
+const viewAllOrders = () => {
+    router.push('/orders') // Перенаправляем на страницу с полным списком заказов
+}
 </script>
 
-
-
-
-
-
-
 <template>
-    <div class="container">
-        <NavMenu />
-        <h1 class="text-2xl font-bold">Личный кабинет</h1>
-
-        <!-- Индикатор загрузки -->
-        <div v-if="isLoading" class="loading">Загрузка...</div>
-
-        <div v-else-if="user" class="profile">
-            <!-- Информация о пользователе -->
-            <div class="profile-info">
-                <p><strong>Имя:</strong> {{ user.name }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-            </div>
-
-            <!-- Кнопки для разных типов пользователей -->
-            <div class="buttons">
-                <button @click="logout" class="btn">Выйти</button>
-
-                <button v-if="user.role === 2" @click="router.push('/seller-dashboard')" class="btn">
-                    Управление магазином
-                </button>
-
-                <button v-if="user.role === 0" @click="router.push('/admin-panel')" class="btn">
-                    Панель администратора
-                </button>
-            </div>
-
-            <!-- История заказов -->
-            <div class="orders">
-                <h2 class="text-xl font-semibold">Мои заказы</h2>
-
-                <div div v-if="!user.orders || user.orders.length === 0">У вас пока нет заказов</div>
-
-                <div v-else class="order-list">
-                    <div v-for="order in user.orders" :key="order.id" class="order-card">
-                        <p><strong>Заказ #{{ order.id }}</strong></p>
-                        <p>Сумма: {{ order.total }} ₽</p>
-                        <p>Статус: {{ order.status }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div v-else class="error" ><NuxtLink > Вы не вошли<Button @click="pus"> Войти</Button></NuxtLink></div>
+    <NavMenu />
+    <div class="max-w-4xl mx-auto p-6 space-y-6 container">
         
+        <h1 class="text-3xl font-bold text-center">Личный кабинет</h1>
 
-        <div class="history">
-            <CardItem 
-                v-for="product in filteredProducts" 
-                :key="product.id" 
-                :product="product" 
-                @click="goToProduct(product.id)" 
-            />
+        <Card v-if="isLoading">
+            <CardContent class="p-6 space-y-4">
+                <Skeleton class="h-6 w-3/4" />
+                <Skeleton class="h-4 w-1/2" />
+            </CardContent>
+        </Card>
+
+        <Card v-else-if="user">
+            <CardHeader>
+                <CardTitle>Добро пожаловать, {{ user.name }}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <div class="flex gap-4 mt-4">
+                    <Button @click="logout">Выйти</Button>
+                    <Button v-if="user.role === 2" @click="router.push('/seller-dashboard')" variant="outline">Управление магазином</Button>
+                    <Button v-if="user.role === 0" @click="router.push('/admin-panel')" variant="destructive">Панель администратора</Button>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card v-else>
+            <CardContent class="p-6 text-center">
+                <p class="text-red-500">Вы не вошли в систему</p>
+                <Button @click="router.push('/auth/login')" class="mt-4">Войти</Button>
+            </CardContent>
+        </Card>
+
+        <!-- Заказы -->
+        <div class="orders mt-6">
+            <h2 class="text-xl font-semibold">Мои последние заказы</h2>
+
+            <div v-if="!user?.orders || user.orders.length === 0" class="text-gray-500">У вас пока нет заказов</div>
+
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Card v-for="order in user.orders.slice(0, 2)" :key="order.id" class="p-4">
+                    <p><strong>Заказ #{{ order.id }}</strong></p>
+                    <p>Сумма: {{ order.totalPrice }} ₽</p>
+                    <p>Статус: {{ order.status === 0 ? 'Ожидает' : 'Завершен' }}</p>
+                    
+                    <!-- Список товаров с ссылками на страницы товара -->
+                    <div class="mt-4">
+                        <p><strong>Товары в заказе:</strong></p>
+                        <ul>
+                            <li v-for="product in order.products" :key="product.productId">
+                                <router-link :to="`/product/${product.productId}`">
+                                    <img :src="product.product.imagePath" alt="product.name" class="w-30 h-20 inline-block mr-2" />
+                                    {{ product.product.name }}
+                                </router-link>
+                                - {{ product.quantity }} шт.
+                            </li>
+                        </ul>
+                    </div>
+                </Card>
+            </div>
+
+            <!-- Кнопка для просмотра всех заказов -->
+            <div v-if="user?.orders.length > 2" class="text-center mt-4">
+                <Button @click="viewAllOrders" variant="outline">Посмотреть все заказы</Button>
+            </div>
         </div>
     </div>
 </template>
