@@ -1,20 +1,30 @@
 @import url('main.css');
 
-.bg-var-color {
+
+.button-style{
+	color: var(--second-color);
+	cursor: pointer;
+	border-radius:8px;
+    border: none;
+	transition: background-color 0.3s ease;
 	background-color: var(--caret-color);
 }
 
-.bg-var-color:hover {
-	background-color: var(--caret-hover);
+.button-style:hover{
+	background-color: var(--second-color);
+    color: var(--caret-color);
+    box-shadow: 2px 2px 4px black;
 }
 
 .min-h-screen {
 	min-height: 100%;
 	overflow: hidden;
-	margin-top: 10%;
+	/*margin-top: 10%;*/
 	padding-left: 20px;
 	padding-right: 20px;
+	background: none;
 }
+
 
 /* Дополнительные стили для мобильных экранов */
 @media (max-width: 320px) {
@@ -26,16 +36,24 @@
 
 
 .rout-to-reg{
-	font-style: italic;
 	margin: 10px 0;
+	color: var(--second-color);
 }
+
 .rout-to-reg:hover{
 	cursor: pointer;
-	color: rgb(67, 67, 67);
-	
+	color:var(--caret-color);
 }
 
 .user-role{
 	height: 100vh;
 }
+
+.header{
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: rgba(128, 64, 0, 1);
+}
+
+
 

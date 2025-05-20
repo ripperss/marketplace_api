@@ -1,11 +1,21 @@
 :root {
-	--caret-color: rgb(131, 86, 62);
-	--caret-hover: rgb(165, 125, 104);
+	--caret-color: rgb(231, 208, 0);
+	--caret-hover: rgb(242,230,117);
+	--second-color: rgb(128, 64, 0);
+}
+
+@font-face {
+    font-family: "Kelly Slab";
+    src: url("../fonts/KellySlab-Regular.ttf"), format("ttf");
 }
 
 .bg-primary {
-	background-color: var(--caret-color);
 	color: white;
+	background-image:  url("../img/background/background-new.png");
+    background-repeat: no-repeat;
+    background-size:cover;
+
+    padding-top: 200px;
 }
 
 .card {
@@ -36,7 +46,9 @@
 	background-color: #ffffff;
 	gap: 10px;
 	padding: 10px 10px;
-	border-radius: 10px;
+	border-color: var(--caret-color);
+	border-width: 2px;
+	border-radius: 8px;
 	object-fit: fill;
 	min-width: 100%;
 }
@@ -94,6 +106,7 @@
 	display: flex;
 	align-items: center;
 	font-size: 1rem;
+	font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
 	@media (max-width: 1279px) {
 		font-size: 0.9rem;
 	}
@@ -108,10 +121,12 @@
 
 .pagination button {
 	padding: 8px 12px;
-	color: #ffffff;
+	color: var(--second-color);
+	font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
 	font-size: 1rem;
 	cursor: pointer;
-	border-radius: 5px;
+	border-radius:8px;
+    border: none;
 	transition: background-color 0.3s ease;
 	background-color: var(--caret-color);
 	@media (max-width: 1279px) {
@@ -125,7 +140,44 @@
 	}
 }
 
+.pagination button:hover{
+	background-color: var(--second-color);
+    color: var(--caret-color);
+    box-shadow: 2px 2px 4px black;
+}
+
 .pagination button:disabled {
 	background-color: var(--caret-hover);
 	cursor: not-allowed;
+}
+
+:link{
+    color: var(--second-color);
+}
+:link:hover{
+    color:var(--caret-color);
+}
+
+.bober-font{
+	font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+}
+
+::placeholder{
+	font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+	color: lightgrey;
+}
+
+.text-color-2{
+	color: var(--second-color)
+}
+
+.round8px{
+	border-radius: 8px;
+}
+
+.flexr{
+	margin-left: auto;
+}
+.flexl{
+	margin-right: auto;
 }

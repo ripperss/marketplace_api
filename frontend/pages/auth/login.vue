@@ -7,8 +7,14 @@ import NavMenu from '@/components/NavMenu/NavMenu.vue'
 const router = useRouter()
 
 const form = ref({
+  /*
   email: 'moishemg@vk.com',
   hashPassword: '2281337dD@'
+  */
+ /*
+    email: 'cool-ryba@omut.com',
+    hashPassword: 'Pa$$vv0Rd'
+    */
 })
 
 
@@ -67,39 +73,39 @@ const login = async () => {
 
 <template>
   <NavMenu />
-  <div class="flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white p-6 rounded-lg">
-      <h2 class="text-xl font-semibold text-center mb-4">Вход</h2>
+  <div class="flex min-h-screen justify-center p-4">
+    <div class="w-full max-w-md p-6 rounded-lg mt-0">
+      <h2 class="text-xl font-semibold text-center mb-4 header">Вход</h2>
 
       <form @submit.prevent="login" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <label class="block text-sm font-medium text-gray-700 bober-font">Email</label>
           <input
             v-model="form.email"
             type="email"
             placeholder="Введите email"
-            class="w-full p-2 border rounded-md"
+            class="w-full p-2 border round8px bober-font"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Пароль</label>
+          <label class="block text-sm font-medium text-gray-700 bober-font">Пароль</label>
           <input
             v-model="form.hashPassword"
             type="password"
             placeholder="Введите пароль"
-            class="w-full p-2 border rounded-md"
+            class="w-full p-2 border round8px bober-font"
           />
         </div>
 
-        <p v-if="errorMessage" class="text-red-500 text-sm text-center">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="text-red-500 text-sm text-center bober-font">{{ errorMessage }}</p>
 
-        <button type="submit" class="w-full bg-var-color text-white p-2 rounded-md">
+        <button type="submit" class="w-full button-style bober-font p-2 round8px">
           Войти
         </button>
       </form>
       <NuxtLink to="/auth/reg">
-        <p class="rout-to-reg">Зарегистрироваться</p>
+        <p class="rout-to-reg text-center bober-font">Зарегистрироваться</p>
       </NuxtLink>
     </div>
   </div>
