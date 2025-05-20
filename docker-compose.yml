@@ -7,8 +7,6 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-    ports:
-      - "8080:8080"
     volumes:
       - ./Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
     container_name: marketplace-api
@@ -20,12 +18,12 @@
 
   postgres:
     image: postgres:latest
-    ports:
-      - "5432:5432"  
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: YourStrongPassword123!
       POSTGRES_DB: marketplace
+    ports:
+      - "5432:5432"  
     volumes:
       - db_data:/var/lib/postgresql/data
     container_name: postgres-db
@@ -34,11 +32,25 @@
 
   redis:
     image: redis:latest
-    ports:
-      - "6379:6379"  
     volumes:
       - redis_data:/data
     container_name: my-redis-container
+    networks:
+      - market
+
+  frontend:
+    image: marketplacefront
+    container_name: marketplace-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"  
+    environment:
+      - DEV_SERVER=http://localhost:8080
+      - PROD_SERVER=/api
+    depends_on:
+      - marketplace-api
     networks:
       - market
 

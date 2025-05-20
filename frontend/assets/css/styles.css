@@ -1,0 +1,181 @@
+@font-face {
+    font-family: "Kelly Slab";
+    src: url("../fonts/KellySlab-Regular.ttf"), format("ttf");
+}
+
+body{
+    background-image:  url("../img/background/background-new.png");
+    background-repeat: no-repeat;
+    background-size:cover;
+
+    padding-top: 200px;
+}
+
+
+.mainblock{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 120px;  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mainblock2{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 120px;  
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    align-items:center;
+}
+
+.main-same{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: inherit;
+}
+
+.main-half1{
+    position: relative;
+    left: 0;
+    width: 50%;
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+}
+.main-half2{
+    position: relative;
+    right: 0;
+    width: 50%;
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+    margin-right: 50px;
+}
+
+.header{
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 40px;
+    color: rgba(128, 64, 0, 1);
+}
+
+.subheader{
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: rgba(128, 64, 0, 1);
+}
+
+.bigtext{
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    color: rgba(128, 64, 0, 1);
+}
+
+.text{
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: black;
+}
+
+.entry{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    gap: 0px;
+    
+    flex-direction: column;
+    position: relative;
+    margin: auto;
+    margin-top: 30px;
+}
+
+.button{
+    display: inline-block;
+    margin: auto;
+    width: 367px;
+    height: 61px;
+    border-radius:8px;
+    border: none;
+    background-color: rgba(231, 208, 0, 1);
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    color: rgba(128, 64, 0, 1);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.523);
+
+    cursor: pointer;
+}
+
+/* Добавить эффект наведения для кнопок */
+button:hover {
+    background-color: rgba(128, 64, 0, 1);
+    color: rgba(231, 208, 0, 1);
+    box-shadow: 2px 2px 4px black;
+}
+
+.inputform{
+    margin: auto;
+    border-radius:8px;
+    border-color: rgba(231, 208, 0, 1);
+    border-width: 2px;
+    border-style:solid;
+    width: 367px;
+    height: 61px;
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    color: rgba(128, 64, 0, 1);
+    
+}
+
+.inputform::placeholder{
+    background: none;
+    font-family: "Kelly Slab", Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    color: lightslategrey;
+}
+
+.inputform-big{
+    width: 508px;
+    height: 280px;
+}
+
+.inputform-img{
+    width: 429px;
+    height: 574px;
+    background-color: white;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    cursor: pointer;
+    text-align: center;
+    transition: background .2s ease-in-out, border .2s ease-in-out;
+    gap:10px;
+}
+
+input[type=file] {
+    opacity: 0;
+}
+
+.inputform-img:hover{
+    background-color: rgb(255, 251, 228);
+}
+
+.input-image-container{
+    position:relative;
+}
+
+:link{
+    /*text-shadow: 1px 1px rgb(179, 164, 22), 2px 2px rgba(200, 120, 22, .2);*/
+    color: rgba(128, 64, 0, 1);
+}
+:link:hover{
+    color:rgba(231, 208, 0, 1);
+}
