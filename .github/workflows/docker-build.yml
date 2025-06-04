@@ -1,0 +1,29 @@
+name: push stage version to dockerhub
+on:
+  push:
+    branches:
+      - 'main' #запуск при пуше в ветку main, если что можно добавить и другие ветки, но у нас все пушится в нее, так что пуфик -_-
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Cut commit sha
+        id: cut
+        run: echo "sha_short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        
+      # нужно добавить на гите секреты и вэриаблз от своего докера... как в практике
+      - name: Log into DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCHUB_USERNAME }}
+          password: ${{ secrets.DOCHUB_TOKEN }}
+     
+     # собираем образ из docker-compose чтобы был образ всего приложения целиком 
+      - name: Build and push images with Compose
+        run: |
+          export IMAGE_TAG=${{ steps.cut-commit.outputs.sha_short }}
+          docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml push
